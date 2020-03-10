@@ -45,7 +45,7 @@ index2 = 0
 for guard in guards:
     value=gallery[guard[0],guard[1]]
     while value==1 or value==-1:
-        guard=(randint(0,size[0]),randint(0,size[1]))
+        guard=[randint(0,size[0]),randint(0,size[1])]
         print("Can't place guard on wall or table")
         value=gallery[guard[0],guard[1]]
     gallery[guard[0],guard[1]]=4
@@ -77,7 +77,7 @@ moves=[walkingcode[i:i+n] for i in range(0,len(walkingcode),n)]
 print(moves)
 i=0
 step=1*reso
-guards=np.array(guards)
+
 for move in moves:
     if move=='01': #move left
         a=guards[i][1]
