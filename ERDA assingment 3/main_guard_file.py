@@ -8,9 +8,11 @@
 import numpy as np
 from random import *
 import matplotlib.pyplot as plt
+from wall_finder import vision
 width= int(160/5)
 height= int(30/5)
-size=(height*10,width*10)  #resolution= 10 cm
+reso=10
+size=(height*reso,width*reso)  #resolution= 10 cm
 
 gallery=np.zeros(size)
 gallery[0,:]=1          #walls
@@ -36,10 +38,18 @@ for guard in guards:
         guard=(randint(0,size[0]),randint(0,size[1]))
         print("Can't place guard on wall")
         value=gallery[guard[0],guard[1]]
-    gallery[guard[0],guard[1]]=3
+    gallery[guard[0],guard[1]]=20
     
 
 print(guards)
 plt.imshow(gallery)
 plt.show()
+
+for guard in guards:
+    gallery=vision(guard,gallery,1/reso)
+    plt.imshow(gallery)
+    plt.show()   
+
+
+
 

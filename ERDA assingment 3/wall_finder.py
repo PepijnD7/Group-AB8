@@ -1,5 +1,5 @@
 import numpy as np
-
+from math import floor
 
 def vision(guard, room,reso_matrix):
     # guard is a list with [x,y] position of the given guard
@@ -24,8 +24,8 @@ def vision(guard, room,reso_matrix):
         for angle in theta_list:
             if angle_check[index] != 1:
 
-                x_cord = int(round((r*np.cos(angle)/reso_matrix) + guard[0]))
-                y_cord = int(round((r*np.sin(angle)/reso_matrix) + guard[1]))
+                x_cord = (floor((r*np.cos(angle)/reso_matrix) + guard[0]))
+                y_cord = (floor((r*np.sin(angle)/reso_matrix) + guard[1]))
 
 
                 if x_cord>xmax or y_cord>ymax or x_cord<0 or y_cord<0:
@@ -43,11 +43,11 @@ def vision(guard, room,reso_matrix):
 
     return room
 
-#guard = [1, 1]
-#room =np.array( [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+# guard = [1, 1]
+# room =np.array( [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 #        [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
 #        [1, 0, 1, 1, 1, 1, 1, 1, 1, 1],
 #        [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
 #        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 
-#print(vision(guard, room,0.1))
+# print(vision(guard, room,0.4))
