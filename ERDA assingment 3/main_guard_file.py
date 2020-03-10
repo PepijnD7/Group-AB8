@@ -34,10 +34,10 @@ gallery[round(tabley_start*reso):round(tabley_end*reso),round((21/5+tablespc)*re
 gallery[round(tabley_start*reso):round(tabley_end*reso),round((21/5+2*tablespc)*reso):round((45/5+2*tablespc)*reso)]=-1
 
 
-guard1=(randint(0,size[0]-1),randint(0,size[1]-1))
-guard2=(randint(0,size[0]-1),randint(0,size[1]-1))
-guard3=(randint(0,size[0]-1),randint(0,size[1]-1))
-guard4=(randint(0,size[0]-1),randint(0,size[1]-1))
+guard1=[randint(0,size[0]-1),randint(0,size[1]-1)]
+guard2=[randint(0,size[0]-1),randint(0,size[1]-1)]
+guard3=[randint(0,size[0]-1),randint(0,size[1]-1)]
+guard4=[randint(0,size[0]-1),randint(0,size[1]-1)]
 
 guards=[guard1,guard2,guard3,guard4]
 
@@ -61,14 +61,50 @@ for guard in guards:
     gallery=vision(guard,gallery,1/reso)
     print()
     print(guard)
-    plt.imshow(gallery)
-    plt.show()
 
+
+plt.imshow(gallery)
+plt.show()
 viewedarea= gallery!=0
 viewedblocks=sum(sum(viewedarea))
 print(viewedblocks)
 perc= viewedblocks/(size[0]*size[1])*100
 print(perc,"%"," of the room is visible.")
+
+walkingcode='01010101'
+n=2
+moves=[walkingcode[i:i+n] for i in range(0,len(walkingcode),n)]
+print(moves)
+i=0
+step=1*reso
+guards=np.array(guards)
+for move in moves:
+    if move=='01': #move left
+        a=guards[i][1]
+       
+        a-=step
+        guards[i][1]=a
+        i+=1
+    elif move=='00':#move forward
+        a=guards[i][0]
+        a+=step
+        guards[i][0]=a
+        i+=1
+    elif move== '10': #move right
+        a=guards[i][1]
+       
+        a+=step
+        guards[i][1]=a
+        i+=1
+    elif move=='11': #move backwards
+        a=guards[i][0]
+        a-=step
+        guards[i][0]=a
+        i+=1
+
+
+print(guards)
+
 
 
 
