@@ -1,0 +1,5 @@
+Displacement [mm]	Actuation force [N]
+10				243.2
+20				173.0
+30				529.7
+39.2				1213.5

@@ -1,0 +1,4 @@
+FiberLocation	ActualLocation
+1.58908	1.05
+2.09349	0.55
+2.59791	0.05

@@ -1,0 +1,6 @@
+Stiffener positions are measured from the bottom spar towards the top spar	
+Stiffener	Arc length (mm)
+1	340
+2	582
+3	627
+4	740
