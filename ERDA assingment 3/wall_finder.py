@@ -19,7 +19,7 @@ def vision(guard, room,reso_matrix):
     ymax,xmax = (room.shape[0]-1),(room.shape[1]-1)
 
     while 0 in angle_check:
-
+        r += radius_reso
         index = 0
         for angle in theta_list:
             if angle_check[index] != 1:
@@ -40,7 +40,7 @@ def vision(guard, room,reso_matrix):
                     room[y_cord][x_cord] = 2
 
             index+=1
-        r += radius_reso
+
     return room
 
 #guard = [1, 1]
