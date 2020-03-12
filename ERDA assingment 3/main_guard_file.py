@@ -13,10 +13,13 @@
 import numpy as np
 from random import *
 import matplotlib.pyplot as plt
-from wall_finder import vision
+
 from itertools import permutations
-from copy import deepcopy
-import itertools
+perclist=[]
+
+#sets up a list of possible movements
+steps = ['00','11','01','10']
+poss= list(permutations(steps))
 
 
 width= int(160/5)
@@ -46,14 +49,9 @@ gallery[round(tabley_start*reso):round(tabley_end*reso),round((21/5+2*tablespc)*
 #------------------------------------------------------------------------------
 #                           Functions setup
 #------------------------------------------------------------------------------
-def percentage(room,size):   #calculates the percentage of the room that is visible
-
-    viewedarea = room!= 0  # Here a Boolean matrix is returned where "True" means visible, wall, table or guard
-    viewedblocks = sum(sum(viewedarea))  # Sums the amount of visible 'blocks'
-    perc = viewedblocks / (size[0] * size[1]) * 100  # calculates % of viewed blocks
-    print(perc, "%", " of the room is visible.")
-    return perc
-
+from wall_finder import vision
+from move_finder import best_move
+from percentage import percentage
 
 
 
@@ -85,19 +83,14 @@ for guard in guards:
 #                           Placement iteration 
 #------------------------------------------------------------------------------
 
-#sets up a list of possible movements
-steps = ['00','11']
-poss=[['00','00','00','00'],['00','00','00','11'],['00','00','11','00'],['00','00','11','11'],['00','11','00','00'],['00','11','00','11'],['00','11','11','00'],['00','11','11','11'],['11','00','00','00'],['11','00','00','11'],['11','00','11','00'],['11','00','11','11'],['11','11','00','00'],['11','11','00','11'],['11','11','11','00'],['11','11','11','11'],]
-points = []
 
 itercount = 0
-previous_p = 0
 current_p = 0
-repeated = 0
-while True:  ###later change to percentage <100%
+
+while itercount<=totalsteps:  
 
     for guard in guards:            #Applying the viewing function from wall_finder.py
-        gallery=vision(guard,gallery,1/reso)
+        gallery=vision(guard,gallery,1/reso,500)
         print()
         print(guard)
     plt.imshow(gallery)
@@ -105,88 +98,86 @@ while True:  ###later change to percentage <100%
 
 
     current_p = percentage(gallery,size)
-    if current_p>99.95:
-        break
-    #if previous_p>current_p:#if the move wasnt efective choose a new one and move the guards back
-    #    guards = previous_guards
-   #     moves = poss[repeated]
-   #     repeated += 1
-
-
-    previous_p = percentage(gallery,size)
-
-
-    noguards= gallery < 4
-    novis= gallery != 2   #'Resets' the gallery matrix
-    gallery= gallery*noguards*novis
-
-
-    i=0
-    step=1*reso
-    j = 0
-
-    previous_guards = deepcopy(guards)
-    for moves in poss:
-
-        print("star movement positions")
-        print(guards)
-        for move in moves:
-                if move=='01': #move left
-                    a=guards[i][1]
-                    a-=step
-                    if a<0:
-                      a=1
-                    value= gallery[guards[i][0],a]
-                    if value !=1 and value !=-1:
-                        guards[i][1]=a
-                    else:
-                        print("Can't walk into a wall")
-
-                elif move== '10': #move right
-                    a=guards[i][1]
-                    a+=step
-                    if a>(size[1]-1):
-                        a=size[1]-2
-                    value= gallery[guards[i][0],a]
-                    if value !=1 and value !=-1:
-                        guards[i][1]=a
-                    else:
-                        print("Can't walk into a wall")
-
-                elif move=='00':#move forward
-                    a=guards[i][0]
-                    a+=step
-                    if a>(size[0]-1):
-                        a=size[0]-2
-                    value= gallery[a,guards[i][1]]
-                    if value !=1 and value !=-1:
-                        guards[i][0]=a
-                    else:
-                        print("Can't walk into a wall")
-
-                elif move=='11': #move backwards
-                    a=guards[i][0]
-                    a-=step
-                    if a<0:
-                      a=1
-                    value= gallery[a,guards[i][1]]
-                    if value !=1 and value !=-1:
-                        guards[i][0]=a
-                    else:
-                        print("Can't walk into a wall")
-                i+=1
+    print("The viewing percentage is:", current_p, "%")
+    perclist.append(current_p)
+    
+    if itercount != totalsteps:
+        noguards= gallery < 4
+        novis= gallery != 2   #'Resets' the gallery matrix
+        gallery= gallery*noguards*novis
 
         i=0
-        j+=1
-    for guard in guards:                    #Checking if the new guard placement doesn't place guards on walls or tables                                         
-        gallery[guard[0],guard[1]]=4
-        guards[i] = guard
-        i+=1
+        step=1*reso
+        nextmoves=best_move(guards,gallery,reso,size,poss,step)
 
-    print("New positions")
-    print(guards)
+        print("Old positions:")
+        print(guards)
+        print()
+
+        print("Guard steps")
+        print(nextmoves)
+        print()
+
+        noguards= gallery < 4
+        novis= gallery != 2   #'Resets' the gallery matrix
+        gallery= gallery*noguards*novis
 
 
+
+        for move in nextmoves:
+            if move=='01': #move left
+                a=guards[i][1]
+                a-=step
+                if a<0:
+                    a=1
+                value= gallery[guards[i][0],a]
+                if value !=1 and value !=-1:
+                    guards[i][1]=a
+                else:
+                    print("Can't walk into a wall")
+
+            elif move== '10': #move right
+                a=guards[i][1]
+                a+=step
+                if a>(size[1]-1):
+                    a=size[1]-2
+                value= gallery[guards[i][0],a]
+                if value !=1 and value !=-1:
+                    guards[i][1]=a
+                else:
+                    print("Can't walk into a wall")
+
+            elif move=='00':#move forward
+                a=guards[i][0]
+                a+=step
+                if a>(size[0]-1):
+                    a=size[0]-2
+                value= gallery[a,guards[i][1]]
+                if value !=1 and value !=-1:
+                    guards[i][0]=a
+                else:
+                    print("Can't walk into a wall")
+
+            elif move=='11': #move backwards
+                a=guards[i][0]
+                a-=step
+                if a<0:
+                    a=1
+                value= gallery[a,guards[i][1]]
+                if value !=1 and value !=-1:
+                    guards[i][0]=a
+                else:
+                    print("Can't walk into a wall")
+            i+=1
+
+
+        for guard in guards:                    #Updates gallery with guard positions                                         
+            gallery[guard[0],guard[1]]=4
+        print("New positions:")
+        print(guards)
+        print()
+    itercount+=1
+print(perclist)
 
 
 
