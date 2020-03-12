@@ -28,7 +28,7 @@ tabley_start= int(10/5)
 tabley_end= int(20/5)
 tablespc=int(47/5)
 reso=5
-totalsteps=2
+totalsteps=5
 size=(height*reso,width*reso)  #resolution= 50 cm
 
 gallery=np.zeros(size)   
