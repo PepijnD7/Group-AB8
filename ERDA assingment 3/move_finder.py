@@ -3,15 +3,34 @@ from wall_finder import vision
 from itertools import permutations
 from percentage import percentage
 from copy import deepcopy
+import statistics
+from random import randint
 import matplotlib.pyplot as plt
 
-def best_move(permpositions,gallery,reso,size,poss,step):
-    movenbr=0
-    bestmove=[0,0]
+def best_perc_indexes(list):
+    p = statistics.median(list)
+    res = []
+    maxidx = 0
+    for idx in range(len(list)):
+        if list[idx] > p:
+            res.append(idx)
+        if list[idx] == max(list):
+            maxidx = idx
+
+    return res,maxidx
+
+
+
+
+def natural_selection(permpositions,gallery,reso,size,poss,step,steps):
+
+    newposs = []
+    percentages = []
     for moves in poss:
-        i=0
-        guards=deepcopy(permpositions) # Resets the guard matrix        
+        guards=deepcopy(permpositions) # Resets the guard matrix
+        i = 0
         for move in moves:
+
             if move=='01': #move left
                 a=guards[i][1]
                 a-=step
@@ -19,7 +38,7 @@ def best_move(permpositions,gallery,reso,size,poss,step):
                     a=1
                 value= gallery[guards[i][0],a]
                 if value !=1 and value !=-1:
-                    guards[i][1]=a
+                   guards[i][1]=a
 
 
 
@@ -30,7 +49,7 @@ def best_move(permpositions,gallery,reso,size,poss,step):
                     a=size[1]-2
                 value= gallery[guards[i][0],a]
                 if value !=1 and value !=-1:
-                    guards[i][1]=a
+                   guards[i][1]=a
 
 
 
@@ -52,10 +71,10 @@ def best_move(permpositions,gallery,reso,size,poss,step):
                     a=1
                 value= gallery[a,guards[i][1]]
                 if value !=1 and value !=-1:
-                    guards[i][0]=a
+                   guards[i][0]=a
+            i +=1
 
 
-            i+=1  
  
         for guard in guards:                #Updates gallery with guard positions                                         
             gallery[guard[0],guard[1]]=4
@@ -64,26 +83,29 @@ def best_move(permpositions,gallery,reso,size,poss,step):
         for guard in guards:            #Applying the viewing function from wall_finder.py
             gallery=vision(guard,gallery,1/reso,200)
 
-            
-
-        newperc= percentage(gallery,size)
-        if newperc> bestmove[0]:
-            perc=newperc
-            bestmove[0]=perc
-            bestmove[1]=movenbr
-            print(perc,poss[movenbr])
+        percentages.append(percentage(gallery,size))            #save the percentage for this move
 
         
         noguards= gallery < 4       #'Resets' the gallery matrix
         novis= gallery != 2   
         gallery= gallery*noguards*novis
-        movenbr+=1
 
 
-    nextmove=poss[bestmove[1]]
-    print("The best move is:", nextmove)
-    print("Viewing percentage is:", bestmove[0])
-    return nextmove
+    best_index, maxidx = best_perc_indexes(percentages)
+    for index in best_index:  #gets the best individuals
+        newposs.append(poss[index])
+
+    t = 0
+    while t<50:                             #creates 50 new mutations
+        individual = newposs[t]
+        mutation = steps[randint(0,3)]
+        individual [randint(0,3)] = mutation
+
+        newposs.append(individual)
+        t+=1
+
+
+    return poss[maxidx]               #returns the first of the new poss list, change this so it returns only after a few runs
 
         
     

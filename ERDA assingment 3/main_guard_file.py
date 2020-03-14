@@ -19,7 +19,12 @@ perclist=[]
 
 #sets up a list of possible movements
 steps = ['00','11','01','10']
-poss= list(permutations(steps))
+poss= []
+
+while len(poss)<100:            #makes a 100 individuals
+    individual = [steps[randint(0,3)],steps[randint(0,3)],steps[randint(0,3)],steps[randint(0,3)]]
+    if individual not in poss:
+        poss.append(individual)
 
 
 width= int(160/5)
@@ -50,7 +55,7 @@ gallery[round(tabley_start*reso):round(tabley_end*reso),round((21/5+2*tablespc)*
 #                           Functions setup
 #------------------------------------------------------------------------------
 from wall_finder import vision
-from move_finder import best_move
+from move_finder import natural_selection
 from percentage import percentage
 
 
@@ -98,6 +103,9 @@ while itercount<=totalsteps:
 
 
     current_p = percentage(gallery,size)
+    if current_p==100:
+        break
+        
     print("The viewing percentage is:", current_p, "%")
     perclist.append(current_p)
     
@@ -108,7 +116,7 @@ while itercount<=totalsteps:
 
         i=0
         step=1*reso
-        nextmoves=best_move(guards,gallery,reso,size,poss,step)
+        nextmoves=natural_selection(guards,gallery,reso,size,poss,step,steps)
 
         print("Old positions:")
         print(guards)
