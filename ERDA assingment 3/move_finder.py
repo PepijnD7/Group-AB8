@@ -62,7 +62,7 @@ def best_move(permpositions,gallery,reso,size,poss,step):
 
 
         for guard in guards:            #Applying the viewing function from wall_finder.py
-            gallery=vision(guard,gallery,1/reso,200)
+            gallery=vision(guard,gallery,1/reso,100)
 
             
 

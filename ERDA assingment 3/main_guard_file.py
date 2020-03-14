@@ -14,12 +14,12 @@ import numpy as np
 from random import *
 import matplotlib.pyplot as plt
 
-from itertools import permutations
+from itertools import product
 perclist=[]
 
 #sets up a list of possible movements
 steps = ['00','11','01','10']
-poss= list(permutations(steps))
+poss= list(product(steps,repeat=4))
 
 
 width= int(160/5)
