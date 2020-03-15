@@ -96,7 +96,7 @@ def natural_selection(permpositions,gallery,reso,size,poss,step,steps):
         newposs.append(poss[index])
 
     t = 0
-    while t<50:                             #creates 50 new mutations
+    while t<len(poss)/2:                             #creates 50 new mutations
         individual = newposs[t]
         mutation = steps[randint(0,3)]
         individual [randint(0,3)] = mutation
@@ -105,7 +105,16 @@ def natural_selection(permpositions,gallery,reso,size,poss,step,steps):
         t+=1
 
 
-    return poss[maxidx]               #returns the first of the new poss list, change this so it returns only after a few runs
+    return newposs , maxidx            #returns the first of the new poss list, change this so it returns only after a few runs
 
-        
-    
+
+def repeating_selection(permpositions,gallery,reso,size,poss,step,steps):
+    newposs = natural_selection(permpositions,gallery,reso,size,poss,step,steps)[0]
+    newposs_2 = natural_selection(permpositions,gallery,reso,size,newposs,step,steps)[0]
+    newposs_3 = natural_selection(permpositions, gallery, reso, size, newposs_2, step, steps)[0]
+    newposs_4 = natural_selection(permpositions, gallery, reso, size, newposs_3, step, steps)[0]
+
+    newposs_5,maxidx = natural_selection(permpositions, gallery, reso, size, newposs_4, step, steps)
+
+    return newposs_4[maxidx]
+

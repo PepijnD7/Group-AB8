@@ -21,7 +21,7 @@ perclist=[]
 steps = ['00','11','01','10']
 poss= []
 
-while len(poss)<100:            #makes a 100 individuals
+while len(poss)<32:            #makes a 100 individuals
     individual = [steps[randint(0,3)],steps[randint(0,3)],steps[randint(0,3)],steps[randint(0,3)]]
     if individual not in poss:
         poss.append(individual)
@@ -55,7 +55,7 @@ gallery[round(tabley_start*reso):round(tabley_end*reso),round((21/5+2*tablespc)*
 #                           Functions setup
 #------------------------------------------------------------------------------
 from wall_finder import vision
-from move_finder import natural_selection
+from move_finder import natural_selection, repeating_selection
 from percentage import percentage
 
 
@@ -116,7 +116,7 @@ while itercount<=totalsteps:
 
         i=0
         step=1*reso
-        nextmoves=natural_selection(guards,gallery,reso,size,poss,step,steps)
+        nextmoves=repeating_selection(guards,gallery,reso,size,poss,step,steps)
 
         print("Old positions:")
         print(guards)
