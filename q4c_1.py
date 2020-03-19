@@ -34,13 +34,4 @@ fn = inv(np.transpose(sn) @ sn) @ np.transpose(sn) @ on
 
 specs = sn[4]
 output=fn @ specs
-
-'''
-yl=list()
-j=0
-y=0
-for i in range(fn.size):
-    y=y+fn[i]*sn[1][i]
-plt.plot(np.transpose(sn))
-plt.show()
-'''
+print(output)
