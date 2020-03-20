@@ -37,6 +37,5 @@ specs = sn[9]
 output=fn @ specs
 
 print(output)
-print
 output=int(np.round(output))
 print("Aircraft is most likely a", aircraft[output])
