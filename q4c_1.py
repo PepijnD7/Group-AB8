@@ -3,7 +3,7 @@ import scipy as sp
 from numpy.linalg import inv
 import matplotlib.pyplot as plt
 
-
+#training data of ten aircraft with ten different specifications
 sn = np.array([[268,60.30,58.37,17.40,880,8800,233000,180000,168000,7],
                [292,60.3,63.69,16.8,880,8200,233000,182000,173000,8],
                [142,35.8,33.62,12.6,850,3500,65317,58604,37648,3],
@@ -26,12 +26,17 @@ specs = np.array([Max.passengers,Wingspan,
                   Cruising speed,Max.range,
                   Max.take-off weight,Max. landing weight,
                   Empty weight,Amount of toilets])
-
 '''
-on = np.array([0,1,2,3,4,5,6,7,8,9])
 
+
+on = np.array([0,1,2,3,4,5,6,7,8,9])
+#find the factors using least-squares method
 fn = inv(np.transpose(sn) @ sn) @ np.transpose(sn) @ on
 
-specs = sn[4]
+specs = sn[9]
 output=fn @ specs
+
 print(output)
+print
+output=int(np.round(output))
+print("Aircraft is most likely a", aircraft[output])
