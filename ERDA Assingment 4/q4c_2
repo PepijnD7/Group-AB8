@@ -1,106 +1,57 @@
 import numpy as np
-import copy
 
-from numpy.linalg import inv
-import matplotlib.pyplot as plt
+class NeuralNetwork:
+    def __init__(self):
+        self.wij = np.random.rand(10, 10)  # input to hidden layer weights
+        self.wjk = np.random.rand(10, 1)  # hidden layer to output
 
-sn = np.array([[268, 60.30, 58.37, 17.40, 880, 8800, 233000, 180000, 168000, 7],
-                           [292, 60.3, 63.69, 16.8, 880, 8200, 233000, 182000, 173000, 8],
-                           [142, 35.8, 33.62, 12.6, 850, 3500, 65317, 58604, 37648, 3],
-                           [188, 35.8, 42.12, 12.6, 850, 4300, 76900, 66361, 42493, 3],
-                           [408, 64.44, 70.67, 19.4, 920, 11500, 390100, 295743, 184567, 9],
-                           [320, 60.9, 63.8, 18.5, 900, 11800, 297500, 201800, 134800, 5],
-                           [408, 64.8, 73.86, 18.5, 920, 12000, 351543, 237680, 159570, 7],
-                           [294, 60.1, 62.8, 16.3, 920, 11500, 252650, 192776, 110677, 6],
-                           [344, 60.1, 68.3, 17.02, 903, 12000, 254100, 202000, 118000, 8],
-                           [88, 26, 31.68, 9.86, 850, 3300, 36500, 34000, 21810, 2]])
+    def sigmoid(self, x, w):
+        z = np.dot(x, w)
+        return 1 / (1 + np.exp(-z))
 
-aircraft = np.array(["Airbus A330-200", "Airbus A330-300",
-                                 "Boeing 737-700", "Boeing 737-900",
-                                 "Boeing 747-400", "Boeing 777-200ER",
-                                 "Boeing 777-300ER", "Boeing 787-9",
-                                 "Boeing 787-10", "Embraer 175"])
-'''
-specs = np.array([Max.passengers,Wingspan,
-                  Length,Height,
-                  Cruising speed,Max.range,
-                  Max.take-off weight,Max. landing weight,
-                  Empty weight,Amount of toilets])
-
-'''
-on = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-
-            ###changes so that b = A*x where previously was b = x*A
-A = np.transpose(sn)
-At = sn
-b = np.transpose(on)
-
-Gn = np.array([1.12773, 1.95434, 1.14442, 1.06081, 1.03959, 1.01523, 1.02295, 0.97765, 0.99767, 1.00154])
-Fn = np.array([[-8.08557e+01,  2.32920e+00, -1.20942e+01, -6.40710e+00,  2.10000e-02, -4.39120e+00,  1.79060e+00,  1.86480e+00,  2.80270e+00,  1.04683e+01],
-               [1.00777e+01,  2.81030e+00, -1.06030e+01, -9.64850e+00,  1.49500e-01, -7.19200e+00,  2.21120e+00,  2.71740e+00,  3.40620e+00,  5.07660e+00],
-               [7.81970e+00,  2.31800e+00, -1.08846e+01, -6.34660e+00,  7.44000e-02,-4.37400e+00,  1.78560e+00,  1.93240e+00,  2.76280e+00,  9.42010e+00],
-               [7.56110e+00,  2.19300e+00, -1.08872e+01, -5.89480e+00,  3.35000e-02, -3.94400e+00,  1.73240e+00,  1.80440e+00,  2.66440e+00,  1.00996e+01],
-               [7.42560e+00,  2.19000e+00, -1.01806e+01, -5.85370e+00,  1.08100e-01,-4.00100e+00,  1.73200e+00,  1.84800e+00,  2.63600e+00,  9.19360e+00],
-               [7.32140e+00,  2.17910e+00, -9.80420e+00, -5.83490e+00,  1.43100e-01, -3.97800e+00,  1.72370e+00,  1.86350e+00,  2.62880e+00,  8.77780e+00],
-               [7.25820e+00,  2.17600e+00, -9.44260e+00, -5.83680e+00,  1.63300e-01,-4.01450e+00,  1.74480e+00,  1.88000e+00,  2.62740e+00,  8.33960e+00],
-               [7.16010e+00,  2.14630e+00, -8.68700e+00, -5.83030e+00,  2.03500e-01,-4.04560e+00,  1.75690e+00,  1.92960e+00,  2.59710e+00,  7.41790e+00],
-               [7.05460e+00, 2.14910e+00, -8.45720e+00, -5.75300e+00,  2.28000e-01, -3.98840e+00,  1.72740e+00,  1.92880e+00,  2.57930e+00,  7.18280e+00],
-               [6.96670e+00,  2.15750e+00, -8.18720e+00, -5.70130e+00,  2.34100e-01,-3.98540e+00,  1.74580e+00,  1.94500e+00,  2.56030e+00,  6.92350e+00]])
+    def sigmoid_derivative(self, x, w):
+        return self.sigmoid(x, w) * (1 - self.sigmoid(x, w))
 
 
-dt = 0.00001
+    def gradient_descent(self,x,y,iterations):
+        etha = 0.001
+
+        for i in range(iterations):
+            Xi = x
+            Xj = self.sigmoid(Xi, self.wij)
+            yhat = self.sigmoid(Xj, self.wjk)
+
+            # gradients for hidden to output weights
+            g_wjk = np.dot(Xj.T, (y - yhat) * self.sigmoid_derivative(Xj, self.wjk))
+            # gradients for input to hidden weights
+            #print(g_wjk)
+            print(self.sigmoid_derivative(Xi, self.wij))
+            #print((y - yhat) * self.sigmoid_derivative(Xj, self.wjk))
+            g_wij = np.dot(Xi.T, np.dot((y - yhat) * self.sigmoid_derivative(Xj, self.wjk),self.wjk.T) * self.sigmoid_derivative(Xi, self.wij))
+
+            # update weights
+            self.wij += etha*g_wij
+            self.wjk += etha*g_wjk
 
 
 
 
+if __name__ == '__main__':
+    neural_network = NeuralNetwork()
+    print('Random starting input to hidden weights: ')
+    print(neural_network.wij)
+    print('Random starting hidden to output weights: ')
+    print(neural_network.wjk)
+    X = np.array([[268., 60.30, 58.37, 17.40, 880., 8800., 233000., 180000., 168000., 7.],
+                           [292., 60.3, 63.69, 16.8, 880., 8200., 233000., 182000., 173000., 8.],
+                           [142., 35.8, 33.62, 12.6, 850., 3500., 65317., 58604., 37648., 3.],
+                           [188., 35.8, 42.12, 12.6, 850., 4300., 76900., 66361., 42493., 3.],
+                           [408., 64.44, 70.67, 19.4, 920., 11500., 390100., 295743., 184567., 9.],
+                           [320., 60.9, 63.8, 18.5, 900., 11800., 297500., 201800., 134800., 5.],
+                           [408., 64.8, 73.86, 18.5, 920., 12000., 351543., 237680., 159570., 7.],
+                           [294., 60.1, 68.3, 17.02, 903., 12000., 254100., 202000., 118000., 8.],
+                           [344., 60.1, 68.3, 17.02, 903., 12000., 254100., 202000., 118000., 8.],
+                           [88., 26., 31.68, 9.86, 850., 3300., 36500., 34000., 21810., 2.]])
 
-for l in range(10000):
-    for i in range(Fn.shape[0]):
-
-        for j in range(Fn.shape[1]):
-
-            previous_error = 100000000
-            smaller_error = previous_error-1
-            while previous_error>smaller_error:
-                previous_error = smaller_error
-
-                Fn[i][j] = Fn[i][j] + dt
-                R = Gn @ Fn @ sn
-                error1 = np.linalg.norm(abs(on - R))
-
-                Fn[i][j] = Fn[i][j] - 2*dt
-                R = Gn @ Fn @ sn
-                error2 = np.linalg.norm(abs(on - R))
-
-                if error1<error2:
-                    Fn[i][j] = Fn[i][j] + 3 * dt
-
-
-                smaller_error = min(error1,error2)
-
-
-    for k in range(Gn.shape[0]):
-        previous_error = 100000000
-        smaller_error = previous_error - 1
-        while previous_error > smaller_error:
-            previous_error = smaller_error
-
-            Gn[k] = Gn[k] + dt
-            R = Gn @ Fn @ sn
-            error1 = np.linalg.norm(abs(on - R))
-
-            Gn[k] = Gn[k] - 2 * dt
-            R = Gn @ Fn @ sn
-            error2 = np.linalg.norm(abs(on - R))
-
-            if error1 < error2:
-                Gn[k] = Gn[k] + 3 * dt
-
-            smaller_error = min(error1, error2)
-
-
-    R = Gn @ Fn @ sn
-    error = on - R
-print(Fn)
-print(Gn)
-print(np.linalg.norm(error))
+    y = np.array([[0., 1., 2., 3., 4., 5., 6., 7., 8., 9.]]).T
+    neural_network.gradient_descent(X, y, 100000)
