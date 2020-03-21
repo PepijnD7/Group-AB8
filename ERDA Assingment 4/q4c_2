@@ -2,36 +2,47 @@ import numpy as np
 
 class NeuralNetwork:
     def __init__(self):
-        self.wij = np.random.rand(10, 10)  # input to hidden layer weights
-        self.wjk = np.random.rand(10, 1)  # hidden layer to output
+        self.wij = np.random.rand(10, 10)/10000  # input to hidden layer weights
+        self.wjk = np.random.rand(10, 1)/10000  # hidden layer to output
 
-    def sigmoid(self, x, w):
-        z = np.dot(x, w)
+    def sigmoid(self,z):
+
         return 1 / (1 + np.exp(-z))
 
-    def sigmoid_derivative(self, x, w):
-        return self.sigmoid(x, w) * (1 - self.sigmoid(x, w))
+    def sigmoid_derivative(self, z):
+        return self.sigmoid(z) * (1 - self.sigmoid(z))
 
 
     def gradient_descent(self,x,y,iterations):
-        etha = 0.001
+        etha = 0.000000001
 
         for i in range(iterations):
             Xi = x
-            Xj = self.sigmoid(Xi, self.wij)
-            yhat = self.sigmoid(Xj, self.wjk)
-
+            zj =  np.dot(Xi, self.wij)
+            Xj = self.sigmoid(zj)
+            zk = np.dot(Xj, self.wjk)
+            yhat = self.sigmoid(zk)
             # gradients for hidden to output weights
-            g_wjk = np.dot(Xj.T, (y - yhat) * self.sigmoid_derivative(Xj, self.wjk))
+            deltak = (y-yhat)* self.sigmoid_derivative(zk)
+            g_wjk = np.dot(Xj.T, (y - yhat)) * self.sigmoid_derivative(zk)
+
+
             # gradients for input to hidden weights
-            #print(g_wjk)
-            print(self.sigmoid_derivative(Xi, self.wij))
-            #print((y - yhat) * self.sigmoid_derivative(Xj, self.wjk))
-            g_wij = np.dot(Xi.T, np.dot((y - yhat) * self.sigmoid_derivative(Xj, self.wjk),self.wjk.T) * self.sigmoid_derivative(Xi, self.wij))
+            deltaj = np.dot(deltak,self.wjk.T)
+            g_wij = self.sigmoid_derivative(zj)*np.dot(deltaj,Xi)
 
             # update weights
             self.wij += etha*g_wij
             self.wjk += etha*g_wjk
+
+
+        print("Thei weights are:")
+        print(self.wij)
+        print(self.wjk)
+        print("The prediction is")
+        print(yhat)
+        #print("difference")
+        #print(y - yhat)
 
 
 
@@ -54,4 +65,4 @@ if __name__ == '__main__':
                            [88., 26., 31.68, 9.86, 850., 3300., 36500., 34000., 21810., 2.]])
 
     y = np.array([[0., 1., 2., 3., 4., 5., 6., 7., 8., 9.]]).T
-    neural_network.gradient_descent(X, y, 100000)
+    neural_network.gradient_descent(X, y, 2)
