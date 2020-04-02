@@ -14,10 +14,10 @@ file1.close()
 file2 = open("data2.txt")
 lines2 = file2.readlines()
 file2.close()
-file3 = open("data2.txt")
+file3 = open("data3.txt")
 lines3 = file3.readlines()
 file3.close()
-file4 = open("data2.txt")
+file4 = open("data4.txt")
 lines4 = file4.readlines()
 file4.close()
 
@@ -105,9 +105,17 @@ disp4 = np.array(disp4)
 forces[0],forces[1],forces[2],forces[3]=force1,force2,force3,force4
 disps[0],disps[1],disps[2],disps[3]=disp1,disp2,disp3,disp4
 
+#adding a smoothing filter to the data
+N= 30
 smoothforces=[0,0,0,0]
+smoothdisps=[0,0,0,0]
+
+
 for i in range(len(smoothforces)):
-  smoothforces[i]=signal.savgol_filter(forces[i],35,3)
+ smoothforces[i]=sp.ndimage.gaussian_filter(forces[i],3)
+ smoothdisps[i]=sp.ndimage.gaussian_filter(disps[i],3)
+#   smoothforces[i]=sp.signal.savgol_filter(forces[i],41,4)
+#   smoothdisps[i]=sp.signal.savgol_filter(disps[i],41,4)
 
 
 
@@ -117,11 +125,17 @@ work2 = trapz(force2,disp2)
 work3 = trapz(force3,disp3)
 work4 = trapz(force4,disp4)
 
-smoothwork1=trapz(smoothforces[0],disps[0])
 
-#plots that dont work here
-plt.scatter(disps[0],forces[0])
-plt.plot(disps[0],smoothforces[0],color='r')
+
+#plots for force vs displacement
+plt.scatter(disps[0],forces[0],color='r',marker='.')
+# plt.scatter(disps[1],forces[1],color='g',marker='.')
+# plt.scatter(disps[2],forces[2],color='b',marker='.')
+# plt.scatter(disps[3],forces[3],color='y',marker='.')
+plt.plot(smoothdisps[0],smoothforces[0],color='brown')
+# plt.plot(smoothdisps[1],smoothforces[1],color='darkolivegreen')
+# plt.plot(smoothdisps[2],smoothforces[2],color='darkblue')
+# plt.plot(smoothdisps[3],smoothforces[3],color='orange')
 plt.show()
 
 #prints results
