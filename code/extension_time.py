@@ -160,7 +160,7 @@ dis4=np.delete(dis4,np.s_[:i])
 
 error=np.array([[error1,error2,error3,error4],
                [errordis1,errordis2,errordis3,errordis4]])
-
+#subtract error
 f1=f1-error[0,0]
 f2=f2-error[0,1]
 f3=f3-error[0,2]
@@ -195,5 +195,15 @@ plt.plot(t1,f1,':',label='10mm')
 plt.plot(t2,f2,'-.',label='20mm')
 plt.plot(t3,f3,'--',label='30mm')
 plt.plot(t4,f4,'-',label='39mm')
+plt.legend(title='Maximum extension:', loc='upper right')
+plt.show()
+
+plt.grid()
+plt.ylabel('Actuation force [N]')
+plt.xlabel('Time [s]')
+plt.plot(t1,f1,'bo',label='10mm')
+plt.plot(t2,f2,'gx',label='20mm')
+plt.plot(t3,f3,'r+',label='30mm')
+plt.plot(t4,f4,'y^',label='39mm')
 plt.legend(title='Maximum extension:', loc='upper right')
 plt.show()
