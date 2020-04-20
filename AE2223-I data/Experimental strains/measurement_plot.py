@@ -1,9 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 data = pd.read_csv("Measurements2014_05_22.txt", sep="\t", engine='python', header=4)
 print(data.head())
-print(data.shape)
+#print(data.shape)
 
 
 code_location = {"A0": 1.58908, "A1": 2.09349, "A2": 2.59791,
@@ -23,40 +24,50 @@ actual_location = {"A0": 1.05, "A1": 0.55, "A2": 0.05,
 # data entry of column must be string
 # data[position of sensor][t] t is number of time step
 
-#t = 32
+
 #addings C and D data to plot
 
-for t in range(79):
-    x1_plot = []
-    y1_plot = []
+t = 55
 
-    x2_plot = []
-    y2_plot = []
+x1_plot = []
+y1_plot = []
 
-    for i in range(8):
-        C = "C" + str(i)
-        D = "D" + str(i)
-
-        stressC = data[str(code_location[C])].iloc[t]
-        stressD = data[str(code_location[D])].iloc[t]
-
-        normal_stress = (stressC+stressD)/2
-        x1_plot.append(actual_location[C])
-        y1_plot.append(normal_stress)
+x2_plot = []
+y2_plot = []
 
 
-    #adding A and B data to plot
-    for i in range(3):
-        A = "A"+str(i)
-        B = "B" + str(i)
+## Gets approximate actual location for every point
+n = data.loc[:,"A0":"A1"]).shape[1]
+np.linspace(actual_location["A0"],actual_location["A1"],n)
 
-        stressA = data[str(code_location[A])].iloc[t]
-        stressB = data[str(code_location[B])].iloc[t]
 
-        normal_stress = (stressA+stressB)/2
-        x2_plot.append(actual_location[A])
-        y2_plot.append(normal_stress)
 
-    plt.plot(x1_plot,y1_plot)
-    plt.plot(x2_plot, y2_plot)
+
+
+for i in range(8):
+    C = "C" + str(i)
+    D = "D" + str(i)
+
+    strainC = data[str(code_location[C])].iloc[t]
+    strainD = data[str(code_location[D])].iloc[t]
+
+    normal_strain = (strainC+strainD)/2
+    x1_plot.append(actual_location[C])
+    y1_plot.append(normal_strain)
+
+
+#adding A and B data to plot
+for i in range(3):
+    A = "A"+str(i)
+    B = "B" + str(i)
+
+    strainA = data[str(code_location[A])].iloc[t]
+    strainB = data[str(code_location[B])].iloc[t]
+
+    normal_strain = (strainA+strainB)/2
+    x2_plot.append(actual_location[A])
+    y2_plot.append(normal_strain)
+
+plt.plot(x1_plot,y1_plot)
+plt.plot(x2_plot, y2_plot)
 plt.show()
