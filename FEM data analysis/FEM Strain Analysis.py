@@ -93,8 +93,33 @@ strain_xz_5 = array_str5[:,6]
 
 
 
-plt.plot(node_list,strain_x_1, label='Loadstep1')
-plt.plot(node_list,strain_x_2, label='Loadstep2')
+# loop meant to separate double measurements at each node
+# NOTE: "even" and "uneven" stand for the row index i
+
+# first separate the nodes so plot gets inputs with the same dimensions
+nodes_once = []
+nodes_once = []
+
+for i in range (0, len(node_list)):
+    node = node_list[i]
+    if i%2 == 0:
+        nodes_once.append(node)
+
+# for strain in x-direction
+strain_x_1_even = []
+strain_x_1_uneven = []
+for i in range (0, len(strain_x_1)):
+    data = strain_x_1[i]
+    if i%2 == 0:
+        strain_x_1_even.append(data)
+    else:
+        strain_x_1_uneven.append(data)
+        
+
+
+# plot the graphs
+plt.plot(nodes_once,strain_x_1_even, label='x1_even')
+plt.plot(nodes_once,strain_x_1_uneven, label='x1_uneven')
 plt.xlabel("Node number")
 plt.ylabel("")
 plt.title("Strain in x-direction")
