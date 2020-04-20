@@ -4,6 +4,7 @@ import scipy as sp
 from scipy.integrate import simps
 from scipy import signal
 from numpy import trapz
+from extension_time_filter import t1,t2,t3,t4
 
 
 #open the files
@@ -112,14 +113,30 @@ smoothdisps=[0,0,0,0]
 
 
 for i in range(len(smoothforces)):
- smoothforces[i]=sp.ndimage.gaussian_filter(forces[i],3)
- smoothdisps[i]=sp.ndimage.gaussian_filter(disps[i],3)
+ smoothforces[i]=list(sp.ndimage.gaussian_filter(forces[i],4))
+ smoothdisps[i]=list(sp.ndimage.gaussian_filter(disps[i],4))
 #   smoothforces[i]=sp.signal.savgol_filter(forces[i],41,4)
 #   smoothdisps[i]=sp.signal.savgol_filter(disps[i],41,4)
 
+partwork=[np.zeros(len(smoothforces[0])),np.zeros(len(smoothforces[1])),np.zeros(len(smoothforces[2])),np.zeros(len(smoothforces[3]))]
+#Work over time
+for j in range(len(smoothforces)):
+    for i in range(len(smoothforces[j][:])):
+        partwork[j][i]=trapz(smoothforces[j][:i],smoothdisps[j][:i])
 
 
-#work done
+plt.grid(True)
+plt.xlabel("Time [s]")
+plt.ylabel("Work done [J]")
+plt.plot(t1,partwork[0],color='r',label='10mm')
+plt.plot(t2[1:],partwork[1],color='g',label='20 mm')
+plt.plot(t3[1:],partwork[2],color='b',label='30 mm')
+plt.plot(t4[1:],partwork[3],color='y',label='39 mm')
+plt.legend()
+plt.show()
+
+
+#Total work done
 work1 = trapz(force1,disp1)
 work2 = trapz(force2,disp2)
 work3 = trapz(force3,disp3)
@@ -127,15 +144,21 @@ work4 = trapz(force4,disp4)
 
 
 
+
+
 #plots for force vs displacement
+plt.grid(True)
+plt.xlabel("Extension [mm]")
+plt.ylabel("Force [N]")
 plt.scatter(disps[0],forces[0],color='r',marker='.')
-# plt.scatter(disps[1],forces[1],color='g',marker='.')
-# plt.scatter(disps[2],forces[2],color='b',marker='.')
-# plt.scatter(disps[3],forces[3],color='y',marker='.')
-plt.plot(smoothdisps[0],smoothforces[0],color='brown')
-# plt.plot(smoothdisps[1],smoothforces[1],color='darkolivegreen')
-# plt.plot(smoothdisps[2],smoothforces[2],color='darkblue')
-# plt.plot(smoothdisps[3],smoothforces[3],color='orange')
+plt.scatter(disps[1],forces[1],color='g',marker='.')
+plt.scatter(disps[2],forces[2],color='b',marker='.')
+plt.scatter(disps[3],forces[3],color='y',marker='.')
+plt.plot(smoothdisps[0],smoothforces[0],color='brown',label='10 mm')
+plt.plot(smoothdisps[1],smoothforces[1],color='darkolivegreen', label='20 mm')
+plt.plot(smoothdisps[2],smoothforces[2],color='darkblue', label='30 mm')
+plt.plot(smoothdisps[3],smoothforces[3],color='orange', label='39 mm')
+plt.legend()
 plt.show()
 
 #prints results
