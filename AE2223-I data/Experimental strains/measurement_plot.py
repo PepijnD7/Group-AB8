@@ -23,15 +23,15 @@ actual_location = {"A0": 1.05, "A1": 0.55, "A2": 0.05,
 
 # data entry of column must be string
 
-'''
+
 def actual_location_est(p1,p2):
-    code1 = code_location[p1]
-    code2 = code_location[p2]
+    code1 = str(code_location[p1])
+    code2 = str(code_location[p2])
     if p1[0] in ["A","C"]:#ascending
-        n = data.loc[0,code1:code2].shape[1]
+        n = int(data.loc[0,code1:code2].shape[0])
 
     else:#descnding
-        n = data.loc[0, code2:code1].shape[1]
+        n = int(data.loc[0, code2:code1].shape[0])
 
     if p1[0] in ["A", "B"]:  # ascending
         x0 = actual_location[p2]
@@ -44,64 +44,75 @@ def actual_location_est(p1,p2):
 
     return np.linspace(x0,x1,n)
 
-print(actual_location["A0"])
-print(actual_location["A1"])
-print(actual_location_est("A0","A1"))
-'''
+
 
 #load step number    -  1  2   3   4   5
-load_steps_t =      [0, 1, 13, 28, 40, 55]
-t = load_steps_t[1]
+load_steps_t =      [ 1, 13, 28, 40, 55]
 
 
 
 
 
-A_plot = []
-Ay_plot = []
+for t in load_steps_t:
 
-B_plot = []
-By_plot = []
+    A_plot = []
+    Ay_plot = []
 
-C_plot = []
-Cy_plot = []
+    B_plot = []
+    By_plot = []
 
-D_plot = []
-Dy_plot = []
+    C_plot = []
+    Cy_plot = []
 
-
-
-for i in range(8):
-    C = "C" + str(i)
-    D = "D" + str(i)
-
-    strainC = data[str(code_location[C])].iloc[t]
-    strainD = data[str(code_location[D])].iloc[t]
-
-    C_plot.append(actual_location[C])
-    Cy_plot.append(strainC)
-
-    D_plot.append(actual_location[D])
-    Dy_plot.append(strainD)
+    D_plot = []
+    Dy_plot = []
 
 
-#adding A and B data to plot
-for i in range(3):
-    A = "A"+str(i)
-    B = "B" + str(i)
 
-    strainA = data[str(code_location[A])].iloc[t]
-    strainB = data[str(code_location[B])].iloc[t]
+    for i in range(7):
+        Ca = "C" + str(i)
+        Cb = "C" + str(i+1)
 
-    A_plot.append(actual_location[A])
-    Ay_plot.append(strainA)
+        Da = "D" + str(i)
+        Db = "D" + str(i+1)
 
-    B_plot.append(actual_location[B])
-    By_plot.append(strainB)
+        strainC = data.loc[t,str(code_location[Ca]):str(code_location[Cb])]
+        strainD = data.loc[t,str(code_location[Db]):str(code_location[Da])]
+        #
+        #do the x as a list
+        xC = actual_location_est(Ca,Cb)
+        xD = actual_location_est(Da, Db)
 
-plt.plot(A_plot,Ay_plot)
-plt.plot(B_plot,By_plot)
-plt.plot(C_plot,Cy_plot)
-plt.plot(D_plot,Dy_plot)
+        C_plot.extend(xC)
+        Cy_plot.extend(strainC)
 
-plt.show()
+        D_plot.extend(xD)
+        Dy_plot.extend(strainD)
+
+
+    #adding A and B data to plot
+    for i in range(1,0,-1):
+        Aa = "A"+str(i)
+        Ab = "A" + str(i+1)
+
+        Ba = "B" + str(i)
+        Bb = "B" + str(i + 1)
+
+        strainA = data.loc[t,str(code_location[Aa]):str(code_location[Ab])]
+        strainB = data.loc[t,str(code_location[Bb]):str(code_location[Ba])]
+
+        xA = actual_location_est(Aa,Ab)
+        xB = actual_location_est(Ba, Bb)
+
+        A_plot.extend(xA)
+        Ay_plot.extend(strainA)
+
+        B_plot.extend(xB)
+        By_plot.extend(strainB)
+
+    plt.plot(A_plot,Ay_plot)
+    plt.plot(B_plot,By_plot)
+    plt.plot(C_plot,Cy_plot)
+    plt.plot(D_plot,Dy_plot)
+
+    plt.show()
