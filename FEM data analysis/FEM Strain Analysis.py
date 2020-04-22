@@ -58,6 +58,31 @@ array_str5 = np.genfromtxt("FEMstrain5.txt",skip_header=1)
 node_list = array_str1[:,0]
 
 
+
+########################################################################################################
+# We need to find the arclenght of the demonstrator, such that we can plot the strain vs. the arclenght:
+coordinatefile = open("shell_loadstep1_disp.out")
+lines1 = coordinatefile.readlines()
+coordinatefile.close()
+
+array_coordinates = np.genfromtxt("shell_loadstep1_disp.out",skip_header=1)
+
+x = array_coordinates[:,2]*1000 # x coordinates in [mm]
+y = array_coordinates[:,3]*1000 # y coordinates in [mm] 
+
+arc = []
+length = 0
+for i in range(2,len(x)-1):
+    length = length + sqrt((abs(x[i]-x[i+1]))**2 + (abs(y[i]-y[i+1]))**2 )
+    arc.append(length)
+    i = i+1
+########################################################################################################
+
+
+
+
+
+########################################################################################################
 # Now, we need all the (shear) strains for each loadstep (1 till 5) and place them in a list
 # Get strain for load step 1:
 strain_x_1 = array_str1[:,1]
@@ -98,31 +123,42 @@ strain_z_5 = array_str5[:,3]
 strain_xy_5 = array_str5[:,4]
 strain_yz_5 = array_str5[:,5]
 strain_xz_5 = array_str5[:,6]
+########################################################################################################
 
 
 
-# We need to find the arclenght of the demonstrator, such that we can plot the strain vs. the arclenght:
-coordinatefile = open("shell_loadstep1_disp.out")
-lines1 = coordinatefile.readlines()
-coordinatefile.close()
-
-array_coordinates = np.genfromtxt("shell_loadstep1_disp.out",skip_header=1)
-
-x = array_coordinates[:,2]*1000 # x coordinates in [mm]
-y = array_coordinates[:,3]*1000 # y coordinates in [mm] 
-
-arc = []
-length = 0
-for i in range(2,len(x)-1):
-    length = length + sqrt((abs(x[i]-x[i+1]))**2 + (abs(y[i]-y[i+1]))**2 )
-    arc.append(length)
-    i = i+1
 
 
+########################################################################################################
+# Get the axial strain and place in 5 new lists:
+axialstr1 = []
+axialstr2 = []
+axialstr3 = []
+axialstr4 = []
+axialstr5 = []
 
+for i in range(0,1114):
+    axial1 = sqrt( (strain_x_1[i])**2 + (strain_y_1[i])**2 + (strain_z_1[i])**2 )
+    axial2 = sqrt( (strain_x_2[i])**2 + (strain_y_2[i])**2 + (strain_z_2[i])**2 )
+    axial3 = sqrt( (strain_x_3[i])**2 + (strain_y_3[i])**2 + (strain_z_3[i])**2 )
+    axial4 = sqrt( (strain_x_4[i])**2 + (strain_y_4[i])**2 + (strain_z_4[i])**2 )
+    axial5 = sqrt( (strain_x_5[i])**2 + (strain_y_5[i])**2 + (strain_z_5[i])**2 )
+
+    axialstr1.append(axial1)
+    axialstr2.append(axial2)
+    axialstr3.append(axial3)
+    axialstr4.append(axial4)
+    axialstr5.append(axial5)
+########################################################################################################
+
+
+
+
+
+########################################################################################################
 # We need a loop to separate double measurements at each node:
 # NOTE: "even" and "uneven" stand for the row index i
-
+# NOTE2.0: "even" indices are on the outside, "uneven" indices are on the inside
 # First separate the nodes so plot gets inputs with the same dimensions
 nodes_once = []
 nodes_once = []
@@ -132,35 +168,63 @@ for i in range (0, len(node_list)):
     if i%2 == 0:
         nodes_once.append(node)
 
-# For strain in x-direction
-strain_x_1_even = []
-strain_x_1_uneven = []
-for i in range (5, len(strain_x_1)):
-    data = strain_x_1[i]
+# Generate axial strain lists for inside and outside:
+axialstr1_out = []
+axialstr1_in  = []
+axialstr2_out = []
+axialstr2_in  = []
+axialstr3_out = []
+axialstr3_in  = []
+axialstr4_out = []
+axialstr4_in  = []
+axialstr5_out = []
+axialstr5_in  = []
+
+for i in range (4, len(strain_x_1)-2):
+    data1 = axialstr1[i]
+    data2 = axialstr2[i]
+    data3 = axialstr3[i]
+    data4 = axialstr4[i]
+    data5 = axialstr5[i]
     if i%2 == 0:
-        strain_x_1_even.append(data)
+        axialstr1_out.append(data1)
+        axialstr2_out.append(data2)
+        axialstr3_out.append(data3)
+        axialstr4_out.append(data4)
+        axialstr5_out.append(data5)
     else:
-        strain_x_1_uneven.append(data)
+        axialstr1_in.append(data1)
+        axialstr2_in.append(data2)
+        axialstr3_in.append(data3)
+        axialstr4_in.append(data4)
+        axialstr5_in.append(data5)
+        
+########################################################################################################
 
 
 
 
 
+########################################################################################################
 # Plot strains:
-plt.plot(arc,strain_x_1_even, label='strain_x1_even')
-# plt.plot(arc,strain_x_1_uneven, label='strain_x1_uneven')
+plt.plot(arc,axialstr1_out, label='Loadstep 1, out')
+plt.plot(arc,axialstr1_in,  label='Loadstep 1, in')
 plt.xlabel("Arc length [mm]")
-plt.ylabel("")
-plt.title("Strain in x-direction")
+plt.ylabel("Axial strain")
+plt.title("Axial strain on the inside and outside")
 plt.grid()
 plt.legend()
 plt.show()
+########################################################################################################
 
 
 
 
 
 
+
+
+########################################################################################################
 # In case we have to calculate strain energy: ??
 
 # Young's modulus of aluminium, E [Pa]
