@@ -2,10 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+
+### Opens the data
 data = pd.read_csv("Measurements2014_05_22.txt", sep="\t", engine='python', header=4)
 print(data.head())
-#print(data.shape)
-
 
 code_location = {"A0": 1.58908, "A1": 2.09349, "A2": 2.59791,
                  "B0": 3.77008, "B1": 3.26436, "B2": 2.75864,
@@ -20,27 +21,49 @@ actual_location = {"A0": 1.05, "A1": 0.55, "A2": 0.05,
                    "D0": 0.076, "D1": 0.297, "D2": 0.388, "D3": 0.540, "D4": 0.650, "D5": 0.711, "D6": 0.764,
                    "D7": 1.024}
 
-
 # data entry of column must be string
-# data[position of sensor][t] t is number of time step
 
 
-#addings C and D data to plot
+def actual_location(p1,p2):
+    code1 = code_location[p1]
+    code2 = code_location[p2]
+    if p1[0] in ["A","C"]#ascending
+        n = data.loc[0,code1:code2].shape[1]
 
-t = 55
+    else:#descnding
+        n = data.loc[0, code2:code1].shape[1]
 
-x1_plot = []
-y1_plot = []
+    if p1[0] in ["A", "B"]  # ascending
+        x0 = actual_location[p2]
+        x1 = actual_location[p1]
 
-x2_plot = []
-y2_plot = []
-
-
-## Gets approximate actual location for every point
-n = data.loc[:,"A0":"A1"]).shape[1]
-np.linspace(actual_location["A0"],actual_location["A1"],n)
+    else:  # descnding
+        x0 = actual_location[p1]
+        x1 = actual_location[p2]
 
 
+    return np.linspace(x0,x1,n)
+
+
+#load step number    -  1  2   3   4   5
+load_steps_t =      [0, 1, 13, 28, 40, 55]
+t = load_steps_t[1]
+
+
+
+
+
+A_plot = []
+Ay_plot = []
+
+B_plot = []
+By_plot = []
+
+C_plot = []
+Cy_plot = []
+
+D_plot = []
+Dy_plot = []
 
 
 
@@ -51,9 +74,11 @@ for i in range(8):
     strainC = data[str(code_location[C])].iloc[t]
     strainD = data[str(code_location[D])].iloc[t]
 
-    normal_strain = (strainC+strainD)/2
-    x1_plot.append(actual_location[C])
-    y1_plot.append(normal_strain)
+    C_plot.append(actual_location[C])
+    Cy_plot.append(strainC)
+
+    D_plot.append(actual_location[D])
+    Dy_plot.append(strainD)
 
 
 #adding A and B data to plot
@@ -64,10 +89,15 @@ for i in range(3):
     strainA = data[str(code_location[A])].iloc[t]
     strainB = data[str(code_location[B])].iloc[t]
 
-    normal_strain = (strainA+strainB)/2
-    x2_plot.append(actual_location[A])
-    y2_plot.append(normal_strain)
+    A_plot.append(actual_location[A])
+    Ay_plot.append(strainC)
 
-plt.plot(x1_plot,y1_plot)
-plt.plot(x2_plot, y2_plot)
+    B_plot.append(actual_location[B])
+    By_plot.append(strainB)
+
+plt.plot(A_plot,Ay_plot)
+plt.plot(B_plot,By_plot)
+plt.plot(C_plot,Cy_plot)
+plt.plot(D_plot,Dy_plot)
+
 plt.show()
