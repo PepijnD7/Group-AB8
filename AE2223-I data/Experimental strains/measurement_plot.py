@@ -52,7 +52,7 @@ load_steps_t =      [ 1, 13, 28, 40, 55]
 
 
 
-
+count = 1
 for t in load_steps_t:
 
     A_plot = []
@@ -110,9 +110,16 @@ for t in load_steps_t:
         B_plot.extend(xB)
         By_plot.extend(strainB)
 
-    plt.plot(A_plot,Ay_plot)
-    plt.plot(B_plot,By_plot)
-    plt.plot(C_plot,Cy_plot)
-    plt.plot(D_plot,Dy_plot)
+    plt.plot(A_plot,Ay_plot,label='Loadstep'+ str(count) + ', A')
+    plt.plot(B_plot,By_plot,label='Loadstep'+ str(count) + ', B')
+    plt.plot(C_plot,Cy_plot,label='Loadstep'+ str(count) + ', C')
+    plt.plot(D_plot,Dy_plot,label='Loadstep'+ str(count) + ', D')
 
+    count+=1
+    plt.xlabel("Arc length [mm]")
+    plt.ylabel("Axial strain[-]")
+    plt.title("Axial strain experiment")
+    plt.grid()
+    plt.legend()
     plt.show()
+
