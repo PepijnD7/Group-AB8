@@ -87,11 +87,11 @@ for t in load_steps_t:
         Cy_plot.extend(strainC)
 
         D_plot.extend(xD)
-        Dy_plot.extend(strainD)
+        Dy_plot.extend(strainD[::-1])
 
 
     #adding A and B data to plot
-    for i in range(1,0,-1):
+    for i in range(1,-1,-1):
         Aa = "A"+str(i)
         Ab = "A" + str(i+1)
 
@@ -108,7 +108,7 @@ for t in load_steps_t:
         Ay_plot.extend(strainA)
 
         B_plot.extend(xB)
-        By_plot.extend(strainB)
+        By_plot.extend(strainB[::-1])
 
     plt.plot(A_plot,Ay_plot,label='Loadstep'+ str(count) + ', A')
     plt.plot(B_plot,By_plot,label='Loadstep'+ str(count) + ', B')
