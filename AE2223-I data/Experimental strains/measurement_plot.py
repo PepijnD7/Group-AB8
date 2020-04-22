@@ -23,17 +23,17 @@ actual_location = {"A0": 1.05, "A1": 0.55, "A2": 0.05,
 
 # data entry of column must be string
 
-
-def actual_location(p1,p2):
+'''
+def actual_location_est(p1,p2):
     code1 = code_location[p1]
     code2 = code_location[p2]
-    if p1[0] in ["A","C"]#ascending
+    if p1[0] in ["A","C"]:#ascending
         n = data.loc[0,code1:code2].shape[1]
 
     else:#descnding
         n = data.loc[0, code2:code1].shape[1]
 
-    if p1[0] in ["A", "B"]  # ascending
+    if p1[0] in ["A", "B"]:  # ascending
         x0 = actual_location[p2]
         x1 = actual_location[p1]
 
@@ -44,6 +44,10 @@ def actual_location(p1,p2):
 
     return np.linspace(x0,x1,n)
 
+print(actual_location["A0"])
+print(actual_location["A1"])
+print(actual_location_est("A0","A1"))
+'''
 
 #load step number    -  1  2   3   4   5
 load_steps_t =      [0, 1, 13, 28, 40, 55]
@@ -90,7 +94,7 @@ for i in range(3):
     strainB = data[str(code_location[B])].iloc[t]
 
     A_plot.append(actual_location[A])
-    Ay_plot.append(strainC)
+    Ay_plot.append(strainA)
 
     B_plot.append(actual_location[B])
     By_plot.append(strainB)
