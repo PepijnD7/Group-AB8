@@ -120,8 +120,8 @@ smoothdisps=[0,0,0,0]
 
 
 for i in range(len(smoothforces)):
- smoothforces[i]=list(sp.ndimage.gaussian_filter(forces[i],stdev))
- smoothdisps[i]=list(sp.ndimage.gaussian_filter(disps[i],stdev))
+    smoothforces[i]=list(sp.ndimage.gaussian_filter(forces[i],stdev))
+    smoothdisps[i]=list(sp.ndimage.gaussian_filter(disps[i],stdev))
 
 
 
@@ -185,3 +185,6 @@ plt.show()
 # print(work3)
 # print(work2)
 # print(work4)
+
+
+
