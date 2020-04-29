@@ -20,6 +20,7 @@
 # Loadstep 5 => strain measurement 55 => extension 39.2 [mm]
 # ------------------------------------------------------------------------------------------------
 
+
 from math import *
 import matplotlib.pyplot as plt
 import numpy as np
@@ -54,8 +55,57 @@ array_str3 = np.genfromtxt("FEMstrain3.txt",skip_header=1)
 array_str4 = np.genfromtxt("FEMstrain4.txt",skip_header=1)
 array_str5 = np.genfromtxt("FEMstrain5.txt",skip_header=1)
 
+
 # Get node numbers:
 node_list = array_str1[:,0]
+
+
+# Create arrays that make a distinction between strain on the inside and outside:
+# NOTE: "even" indices are on the outside, "uneven" indices are on the inside
+list_str1_out = []
+list_str2_out = []
+list_str3_out = []
+list_str4_out = []
+list_str5_out = []
+list_str1_in = []
+list_str2_in = []
+list_str3_in = []
+list_str4_in = []
+list_str5_in = []
+
+
+for i in range (0, len(array_str1)):
+    data1 = array_str1[i]
+    data2 = array_str2[i]
+    data3 = array_str3[i]
+    data4 = array_str4[i]
+    data5 = array_str5[i]
+    if i%2 == 0:
+        list_str1_out.append(data1)
+        list_str2_out.append(data2)
+        list_str3_out.append(data3)
+        list_str4_out.append(data4)
+        list_str5_out.append(data5)
+    else:
+        list_str1_in.append(data1)
+        list_str2_in.append(data2)
+        list_str3_in.append(data3)
+        list_str4_in.append(data4)
+        list_str5_in.append(data5)
+
+array_str1_out = np.array(list_str1_out)
+array_str2_out = np.array(list_str2_out)
+array_str3_out = np.array(list_str3_out)
+array_str4_out = np.array(list_str4_out)
+array_str5_out = np.array(list_str5_out)
+
+array_str1_in = np.array(list_str1_in)
+array_str2_in = np.array(list_str2_in)
+array_str3_in = np.array(list_str3_in)
+array_str4_in = np.array(list_str4_in)
+array_str5_in = np.array(list_str5_in)
+
+
 
 
 
@@ -72,7 +122,7 @@ y = array_coordinates[:,3]*1000 # y coordinates in [mm]
 
 arc = []
 length = 0
-for i in range(2,len(x)-1):
+for i in range(0,len(x)-1):
     length = length + sqrt((abs(x[i]-x[i+1]))**2 + (abs(y[i]-y[i+1]))**2 )
     arc.append(length)
     i = i+1
@@ -83,46 +133,15 @@ for i in range(2,len(x)-1):
 
 
 ########################################################################################################
-# Now, we need all the (shear) strains for each loadstep (1 till 5) and place them in a list
-# Get strain for load step 1:
-strain_x_1 = array_str1[:,1]
-strain_y_1 = array_str1[:,2]
-strain_z_1 = array_str1[:,3]
-strain_xy_1 = array_str1[:,4]
-strain_yz_1 = array_str1[:,5]
-strain_xz_1 = array_str1[:,6]
+# Get the angles between the local coordinate systems and the global coordinate system for each node:
+theta = []
+for i in range(0, len(x)-1):
+    T = np.arctan(abs(y[i]-y[i+1])/abs(x[i]-x[i+1]))
+    theta.append(T)
 
-# Get strain for load step 2:
-strain_x_2 = array_str2[:,1]
-strain_y_2 = array_str2[:,2]
-strain_z_2 = array_str2[:,3]
-strain_xy_2 = array_str2[:,4]
-strain_yz_2 = array_str2[:,5]
-strain_xz_2 = array_str2[:,6]
+print(max(theta_list)) # Should be around pi/2 for the tip of the leading edge
+print(len(theta_list))
 
-# Get strain for load step 3:
-strain_x_3 = array_str3[:,1]
-strain_y_3 = array_str3[:,2]
-strain_z_3 = array_str3[:,3]
-strain_xy_3 = array_str3[:,4]
-strain_yz_3 = array_str3[:,5]
-strain_xz_3 = array_str3[:,6]
-
-# Get strain for load step 4:
-strain_x_4 = array_str4[:,1]
-strain_y_4 = array_str4[:,2]
-strain_z_4 = array_str4[:,3]
-strain_xy_4 = array_str4[:,4]
-strain_yz_4 = array_str4[:,5]
-strain_xz_4 = array_str4[:,6]
-
-# Get strain for load step 5:
-strain_x_5 = array_str5[:,1]
-strain_y_5 = array_str5[:,2]
-strain_z_5 = array_str5[:,3]
-strain_xy_5 = array_str5[:,4]
-strain_yz_5 = array_str5[:,5]
-strain_xz_5 = array_str5[:,6]
 ########################################################################################################
 
 
@@ -130,25 +149,72 @@ strain_xz_5 = array_str5[:,6]
 
 
 ########################################################################################################
-# Get the axial strain and place in 5 new lists:
-axialstr1 = []
-axialstr2 = []
-axialstr3 = []
-axialstr4 = []
-axialstr5 = []
+# Now, we need all the strains for each loadstep (1 till 5) and place them in a list
+# Get strain on inside and outside for load step 1:
+str_out_x_1  = array_str1_out[:,1]
+str_in_x_1   = array_str1_in[:,1]
+str_out_y_1  = array_str1_out[:,2]
+str_in_y_1   = array_str1_in[:,2]
+str_out_z_1  = array_str1_out[:,3]
+str_out_xy_1 = array_str1_out[:,4]
+str_in_xy_1  = array_str1_in[:,4]
+str_out_yz_1 = array_str1_out[:,5]
+str_in_yz_1  = array_str1_in[:,5]
+str_out_xz_1 = array_str1_out[:,6]
+str_in_xz_1  = array_str1_in[:,6]
 
-for i in range(0,1114):
-    axial1 = sqrt( (strain_x_1[i])**2 + (strain_y_1[i])**2 + (strain_z_1[i])**2 )
-    axial2 = sqrt( (strain_x_2[i])**2 + (strain_y_2[i])**2 + (strain_z_2[i])**2 )
-    axial3 = sqrt( (strain_x_3[i])**2 + (strain_y_3[i])**2 + (strain_z_3[i])**2 )
-    axial4 = sqrt( (strain_x_4[i])**2 + (strain_y_4[i])**2 + (strain_z_4[i])**2 )
-    axial5 = sqrt( (strain_x_5[i])**2 + (strain_y_5[i])**2 + (strain_z_5[i])**2 )
+# Get strain on inside and outside for load step 2:
+str_out_x_2  = array_str2_out[:,1]
+str_in_x_2   = array_str2_in[:,1]
+str_out_y_2  = array_str2_out[:,2]
+str_in_y_2   = array_str2_in[:,2]
+str_out_z_2  = array_str2_out[:,3]
+str_out_xy_2 = array_str2_out[:,4]
+str_in_xy_2  = array_str2_in[:,4]
+str_out_yz_2 = array_str2_out[:,5]
+str_in_yz_2  = array_str2_in[:,5]
+str_out_xz_2 = array_str2_out[:,6]
+str_in_xz_2  = array_str2_in[:,6]
 
-    axialstr1.append(axial1)
-    axialstr2.append(axial2)
-    axialstr3.append(axial3)
-    axialstr4.append(axial4)
-    axialstr5.append(axial5)
+# Get strain on inside and outside for load step 3:
+str_out_x_3  = array_str3_out[:,1]
+str_in_x_3   = array_str3_in[:,1]
+str_out_y_3  = array_str3_out[:,2]
+str_in_y_3   = array_str3_in[:,2]
+str_out_z_3  = array_str3_out[:,3]
+str_out_xy_3 = array_str3_out[:,4]
+str_in_xy_3  = array_str3_in[:,4]
+str_out_yz_3 = array_str3_out[:,5]
+str_in_yz_3  = array_str3_in[:,5]
+str_out_xz_3 = array_str3_out[:,6]
+str_in_xz_3  = array_str3_in[:,6]
+
+# Get strain on inside and outside for load step 4:
+str_out_x_4  = array_str4_out[:,1]
+str_in_x_4   = array_str4_in[:,1]
+str_out_y_4  = array_str4_out[:,2]
+str_in_y_4   = array_str4_in[:,2]
+str_out_z_4  = array_str4_out[:,3]
+str_out_xy_4 = array_str4_out[:,4]
+str_in_xy_4  = array_str4_in[:,4]
+str_out_yz_4 = array_str4_out[:,5]
+str_in_yz_4  = array_str4_in[:,5]
+str_out_xz_4 = array_str4_out[:,6]
+str_in_xz_4  = array_str4_in[:,6]
+
+# Get strain on inside and outside for load step 5:
+str_out_x_5  = array_str5_out[:,1]
+str_in_x_5   = array_str5_in[:,1]
+str_out_y_5  = array_str5_out[:,2]
+str_in_y_5   = array_str5_in[:,2]
+str_out_z_5  = array_str5_out[:,3]
+str_out_xy_5 = array_str5_out[:,4]
+str_in_xy_5  = array_str5_in[:,4]
+str_out_yz_5 = array_str5_out[:,5]
+str_in_yz_5  = array_str5_in[:,5]
+str_out_xz_5 = array_str5_out[:,6]
+str_in_xz_5  = array_str5_in[:,6]
+
 ########################################################################################################
 
 
@@ -156,50 +222,39 @@ for i in range(0,1114):
 
 
 ########################################################################################################
-# We need a loop to separate double measurements at each node:
-# NOTE: "even" and "uneven" stand for the row index i
-# NOTE2.0: "even" indices are on the outside, "uneven" indices are on the inside
-# First separate the nodes so plot gets inputs with the same dimensions
-nodes_once = []
-nodes_once = []
+# Get the transformed strain and place them in lists for xprime and yprime, both on the inside and outside:
+str_xprime1_out = []
+str_xprime2_out = []
 
-for i in range (0, len(node_list)):
-    node = node_list[i]
-    if i%2 == 0:
-        nodes_once.append(node)
+str_xprime1_in = []
+str_xprime2_in = []
 
-# Generate axial strain lists for inside and outside:
-axialstr1_out = []
-axialstr1_in  = []
-axialstr2_out = []
-axialstr2_in  = []
-axialstr3_out = []
-axialstr3_in  = []
-axialstr4_out = []
-axialstr4_in  = []
-axialstr5_out = []
-axialstr5_in  = []
 
-for i in range (4, len(strain_x_1)-2):
-    data1 = axialstr1[i]
-    data2 = axialstr2[i]
-    data3 = axialstr3[i]
-    data4 = axialstr4[i]
-    data5 = axialstr5[i]
-    if i%2 == 0:
-        axialstr1_out.append(data1)
-        axialstr2_out.append(data2)
-        axialstr3_out.append(data3)
-        axialstr4_out.append(data4)
-        axialstr5_out.append(data5)
-    else:
-        axialstr1_in.append(data1)
-        axialstr2_in.append(data2)
-        axialstr3_in.append(data3)
-        axialstr4_in.append(data4)
-        axialstr5_in.append(data5)
-        
+str_yprime1_out = []
+str_yprime2_out = []
+
+str_yprime1_in = []
+str_yprime2_in = []
+
+for i in range(0,len(theta_list)):
+    xprime1_out = str_out_x_1[i]*(np.cos(theta[i]))**2 + str_out_y_1[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_1[i]*np.sin(theta[i])*np.cos(theta[i])
+    xprime2_out = str_out_x_2[i]*(np.cos(theta[i]))**2 + str_out_y_2[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_2[i]*np.sin(theta[i])*np.cos(theta[i])
+    xprime3_out = str_out_x_3[i]*(np.cos(theta[i]))**2 + str_out_y_3[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_3[i]*np.sin(theta[i])*np.cos(theta[i])
+    xprime4_out = str_out_x_4[i]*(np.cos(theta[i]))**2 + str_out_y_4[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_4[i]*np.sin(theta[i])*np.cos(theta[i])
+    xprime5_out = str_out_x_5[i]*(np.cos(theta[i]))**2 + str_out_y_5[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_5[i]*np.sin(theta[i])*np.cos(theta[i])
+
+    xprime1_in = ...
+    xprime2_in = ...
+    ....
+
+
+    # append all the values to lists:
+    str_xprime1_out.append(xprime1_out)
+    str_xprime2_out.append(xprime2_out)
+
+
 ########################################################################################################
+
 
 
 
@@ -207,11 +262,11 @@ for i in range (4, len(strain_x_1)-2):
 
 ########################################################################################################
 # Plot strains:
-plt.plot(arc,axialstr1_out, label='Loadstep 1, out')
-plt.plot(arc,axialstr1_in,  label='Loadstep 1, in')
+plt.plot(arc,axialstr3_out, label='Loadstep 3, out')
+plt.plot(arc,axialstr3_in,  label='Loadstep 3, in')
 plt.xlabel("Arc length [mm]")
 plt.ylabel("Axial strain")
-plt.title("Axial strain on the inside and outside")
+plt.title("Axial strain on the inside and outside (actuator extension 20 [mm])")
 plt.grid()
 plt.legend()
 plt.show()
