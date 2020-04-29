@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-
+from scipy import interpolate
 
 
 ### Opens the data
@@ -22,7 +22,7 @@ actual_location = {"A0": 1.05, "A1": 0.55, "A2": 0.05,
                    "D7": 1.024}
 
 # data entry of column must be string
-
+stiffners = [0.34 , 0.582, 0.627, 0.74]
 
 def actual_location_est(p1,p2):
     code1 = str(code_location[p1])
@@ -83,11 +83,11 @@ for t in load_steps_t:
         xC = actual_location_est(Ca,Cb)
         xD = actual_location_est(Da, Db)
 
-        C_plot.extend(xC)
-        Cy_plot.extend(strainC)
+        C_plot.extend(xC[:-1])
+        Cy_plot.extend(strainC[:-1])
 
-        D_plot.extend(xD)
-        Dy_plot.extend(strainD[::-1])
+        D_plot.extend(xD[:-1])
+        Dy_plot.extend((strainD[::-1])[:-1])
 
 
     #adding A and B data to plot
@@ -104,19 +104,36 @@ for t in load_steps_t:
         xA = actual_location_est(Aa,Ab)
         xB = actual_location_est(Ba, Bb)
 
-        A_plot.extend(xA)
-        Ay_plot.extend(strainA)
+        A_plot.extend(xA[:-1])
+        Ay_plot.extend((strainA[::-1])[:-1])
 
-        B_plot.extend(xB)
-        By_plot.extend(strainB[::-1])
+        B_plot.extend(xB[:-1])
+        By_plot.extend(strainB[:-1])
 
-    plt.plot(A_plot,Ay_plot,label='Loadstep'+ str(count) + ', A')
-    plt.plot(B_plot,By_plot,label='Loadstep'+ str(count) + ', B')
-    plt.plot(C_plot,Cy_plot,label='Loadstep'+ str(count) + ', C')
-    plt.plot(D_plot,Dy_plot,label='Loadstep'+ str(count) + ', D')
+    #plt.plot(A_plot, Ay_plot, label='Loadstep ' + str(count) + ', A')
+    #plt.plot(B_plot, By_plot, label='Loadstep ' + str(count) + ', B')
+    #plt.plot(C_plot, np.negative(Cy_plot), label='Loadstep ' + str(count) + ', C [ *-1]')
+    #plt.plot(D_plot, np.negative(Dy_plot), label='Loadstep ' + str(count) + ', D [*-1]')
 
-    count+=1
-    plt.xlabel("Arc length [mm]")
+
+
+    xnew = np.linspace(0.08,1.02,7000)
+
+    Ainter = interpolate.interp1d(np.array(A_plot),np.array(Ay_plot),kind="cubic")
+    Binter = interpolate.interp1d(np.array(B_plot),np.array(By_plot),kind="cubic")
+    Cinter = interpolate.interp1d(np.array(C_plot),np.array(Cy_plot),kind="cubic")
+    Dinter = interpolate.interp1d(np.array(D_plot),np.array(Dy_plot),kind="cubic")
+
+
+
+    plt.plot(xnew,Ainter(xnew),label='Loadstep '+ str(count) + ', A')
+    plt.plot(xnew,Binter(xnew),label='Loadstep '+ str(count) + ', B')
+    plt.plot(xnew,np.negative(Cinter(xnew)) , label='Loadstep '+ str(count) + ', C[ *-1]')
+    plt.plot(xnew,np.negative(Dinter(xnew)),label='Loadstep '+ str(count) + ', D[ *-1]')
+    plt.plot(stiffners, [0, 0, 0, 0], "o", label='Stiffeners')
+
+    count += 1
+    plt.xlabel("Arc length [m]")
     plt.ylabel("Axial strain[-]")
     plt.title("Axial strain experiment")
     plt.grid()
