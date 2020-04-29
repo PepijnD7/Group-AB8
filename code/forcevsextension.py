@@ -113,7 +113,7 @@ disp4 = np.array(disp4)
 forces[0],forces[1],forces[2],forces[3]=force1,force2,force3,force4
 disps[0],disps[1],disps[2],disps[3]=disp1,disp2,disp3,disp4
 
-#adding a smoothing filter to the data, choose between gaussian or savgol
+#adding a smoothing filter to the data, gaussian 
 stdev=4 
 smoothforces=[0,0,0,0]
 smoothdisps=[0,0,0,0]
@@ -136,6 +136,10 @@ for j in range(len(smoothforces)):
 plt.grid(True)
 plt.xlabel("Time [s]")
 plt.ylabel("Energy [J]")
+plt.ylim(0,30)
+plt.xlim(0,16)
+plt.xticks(range(0,17))
+plt.yticks(range(0,31,2))
 plt.plot(t1,partwork[0],color='r',label='10mm')
 plt.plot(t2,partwork[1],color='g',label='20 mm')
 plt.plot(t3,partwork[2],color='b',label='30 mm')
@@ -160,6 +164,10 @@ work4 = trapz(force4,disp4)
 plt.grid(True)
 plt.xlabel("Extension [mm]")
 plt.ylabel("Force [N]")
+plt.xticks(np.arange(-2,42,2))
+plt.yticks(np.arange(-100,1300,100))
+plt.xlim(-2,40)
+plt.ylim(-100,1200)
 plt.scatter(disps[0],forces[0],color='r',marker='.')
 plt.scatter(disps[1],forces[1],color='g',marker='.')
 plt.scatter(disps[2],forces[2],color='b',marker='.')
