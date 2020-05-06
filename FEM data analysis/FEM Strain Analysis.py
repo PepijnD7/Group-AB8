@@ -108,7 +108,6 @@ array_str5_in = np.array(list_str5_in)
 
 
 
-
 ########################################################################################################
 # We need to find the arclenght of the demonstrator, such that we can plot the strain vs. the arclenght:
 coordinatefile = open("shell_loadstep1_disp.out")
@@ -135,12 +134,12 @@ for i in range(0,len(x)-1):
 ########################################################################################################
 # Get the angles between the local coordinate systems and the global coordinate system for each node:
 theta = []
-for i in range(0, len(x)-1):
+for i in range(0,len(x)-1):
     T = np.arctan(abs(y[i]-y[i+1])/abs(x[i]-x[i+1]))
     theta.append(T)
 
 print(max(theta)) # Should be around pi/2 for the tip of the leading edge
-print(len(theta))
+
 
 ########################################################################################################
 
@@ -254,17 +253,17 @@ str_yprime5_in = []
 
 
 for i in range(0,len(theta)):
-    xprime1_out = str_out_x_1[i]*(np.cos(theta[i]))**2 + str_out_y_1[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_1[i]*np.sin(theta[i])*np.cos(theta[i])
-    xprime2_out = str_out_x_2[i]*(np.cos(theta[i]))**2 + str_out_y_2[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_2[i]*np.sin(theta[i])*np.cos(theta[i])
-    xprime3_out = str_out_x_3[i]*(np.cos(theta[i]))**2 + str_out_y_3[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_3[i]*np.sin(theta[i])*np.cos(theta[i])
-    xprime4_out = str_out_x_4[i]*(np.cos(theta[i]))**2 + str_out_y_4[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_4[i]*np.sin(theta[i])*np.cos(theta[i])
-    xprime5_out = str_out_x_5[i]*(np.cos(theta[i]))**2 + str_out_y_5[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_5[i]*np.sin(theta[i])*np.cos(theta[i])
+    xprime1_out = (str_out_x_1[i]*(np.cos(theta[i]))**2 + str_out_y_1[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_1[i]*np.sin(theta[i])*np.cos(theta[i]))*1000000
+    xprime2_out = (str_out_x_2[i]*(np.cos(theta[i]))**2 + str_out_y_2[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_2[i]*np.sin(theta[i])*np.cos(theta[i]))*1000000
+    xprime3_out = (str_out_x_3[i]*(np.cos(theta[i]))**2 + str_out_y_3[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_3[i]*np.sin(theta[i])*np.cos(theta[i]))*1000000
+    xprime4_out = (str_out_x_4[i]*(np.cos(theta[i]))**2 + str_out_y_4[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_4[i]*np.sin(theta[i])*np.cos(theta[i]))*1000000
+    xprime5_out = (str_out_x_5[i]*(np.cos(theta[i]))**2 + str_out_y_5[i]*(np.sin(theta[i]))**2 + 2*str_out_xy_5[i]*np.sin(theta[i])*np.cos(theta[i]))*1000000
 
-    xprime1_in = str_in_x_1[i]*(np.cos(theta[i]))**2 + str_in_y_1[i]*(np.sin(theta[i]))**2 + 2*str_in_xy_1[i]*np.sin(theta[i])*np.cos(theta[i])
-    xprime2_in = str_in_x_2[i]*(np.cos(theta[i]))**2 + str_in_y_2[i]*(np.sin(theta[i]))**2 + 2*str_in_xy_2[i]*np.sin(theta[i])*np.cos(theta[i])
-    xprime3_in = str_in_x_3[i]*(np.cos(theta[i]))**2 + str_in_y_3[i]*(np.sin(theta[i]))**2 + 2*str_in_xy_3[i]*np.sin(theta[i])*np.cos(theta[i])
-    xprime4_in = str_in_x_4[i]*(np.cos(theta[i]))**2 + str_in_y_4[i]*(np.sin(theta[i]))**2 + 2*str_in_xy_4[i]*np.sin(theta[i])*np.cos(theta[i])
-    xprime5_in = str_in_x_5[i]*(np.cos(theta[i]))**2 + str_in_y_5[i]*(np.sin(theta[i]))**2 + 2*str_in_xy_5[i]*np.sin(theta[i])*np.cos(theta[i])
+    xprime1_in = (str_in_x_1[i]*(np.cos(theta[i]))**2 + str_in_y_1[i]*(np.sin(theta[i]))**2 + 2*str_in_xy_1[i]*np.sin(theta[i])*np.cos(theta[i]))*1000000
+    xprime2_in = (str_in_x_2[i]*(np.cos(theta[i]))**2 + str_in_y_2[i]*(np.sin(theta[i]))**2 + 2*str_in_xy_2[i]*np.sin(theta[i])*np.cos(theta[i]))*1000000
+    xprime3_in = (str_in_x_3[i]*(np.cos(theta[i]))**2 + str_in_y_3[i]*(np.sin(theta[i]))**2 + 2*str_in_xy_3[i]*np.sin(theta[i])*np.cos(theta[i]))*1000000
+    xprime4_in = (str_in_x_4[i]*(np.cos(theta[i]))**2 + str_in_y_4[i]*(np.sin(theta[i]))**2 + 2*str_in_xy_4[i]*np.sin(theta[i])*np.cos(theta[i]))*1000000
+    xprime5_in = (str_in_x_5[i]*(np.cos(theta[i]))**2 + str_in_y_5[i]*(np.sin(theta[i]))**2 + 2*str_in_xy_5[i]*np.sin(theta[i])*np.cos(theta[i]))*1000000
     
     yprime1_out = str_out_x_1[i]*(np.sin(theta[i]))**2 + str_out_y_1[i]*(np.cos(theta[i]))**2 - 2*str_out_xy_1[i]*np.sin(theta[i])*np.cos(theta[i])
     yprime2_out = str_out_x_2[i]*(np.sin(theta[i]))**2 + str_out_y_2[i]*(np.cos(theta[i]))**2 - 2*str_out_xy_2[i]*np.sin(theta[i])*np.cos(theta[i])
@@ -304,58 +303,134 @@ for i in range(0,len(theta)):
     str_yprime4_in.append(yprime4_in)
     str_yprime5_in.append(yprime5_in)
 
+# Reverse the lists:
+str_xprime1_out.reverse()
+str_xprime2_out.reverse()
+str_xprime3_out.reverse()
+str_xprime4_out.reverse()
+str_xprime5_out.reverse()
+
+str_xprime1_in.reverse()
+str_xprime2_in.reverse()
+str_xprime3_in.reverse()
+str_xprime4_in.reverse()
+str_xprime5_in.reverse()
+########################################################################################################
+
+
+
+
+
+########################################################################################################
+# Strain in x' direction is equal to axial strain:
+
+axialstrain1_out = str_xprime1_out
+axialstrain2_out = str_xprime2_out
+axialstrain3_out = str_xprime3_out
+axialstrain4_out = str_xprime4_out
+axialstrain5_out = str_xprime5_out
+
+axialstrain1_in = str_xprime1_in
+axialstrain2_in = str_xprime2_in
+axialstrain3_in = str_xprime3_in
+axialstrain4_in = str_xprime4_in
+axialstrain5_in = str_xprime5_in
 
 ########################################################################################################
 
-'''
-# Get bending strain
-    
-bendstr1 = []
-bendstr2 = []
-bendstr3 = []
-bendstr4 = []
-bendstr5 = []
 
-for j in range(0, len(str_xprime1_out)):
-    str_out_1 = np.sqrt(str_xprime1_out[j]**2 + str_yprime1_out[j]**2 + str_out_z_1[j]**2)
-    str_out_2 = np.sqrt(str_xprime2_out[j]**2 + str_yprime2_out[j]**2 + str_out_z_2[j]**2)
-    str_out_3 = np.sqrt(str_xprime3_out[j]**2 + str_yprime3_out[j]**2 + str_out_z_3[j]**2)
-    str_out_4 = np.sqrt(str_xprime4_out[j]**2 + str_yprime4_out[j]**2 + str_out_z_4[j]**2)
-    str_out_5 = np.sqrt(str_xprime5_out[j]**2 + str_yprime5_out[j]**2 + str_out_z_5[j]**2)
+
+
+
+########################################################################################################
+# Get the axial strain (add inside and outside, then divide by 2):
+AxialStrain1 = []
+AxialStrain2 = []
+AxialStrain3 = []
+AxialStrain4 = []
+AxialStrain5 = []
+
+for i in range(0,len(axialstrain1_out)):
+    axial1 = (axialstrain1_out[i] + axialstrain1_in[i])/2
+    axial2 = (axialstrain2_out[i] + axialstrain2_in[i])/2
+    axial3 = (axialstrain3_out[i] + axialstrain3_in[i])/2
+    axial4 = (axialstrain4_out[i] + axialstrain4_in[i])/2
+    axial5 = (axialstrain5_out[i] + axialstrain5_in[i])/2
+
+    AxialStrain1.append(axial1)
+    AxialStrain2.append(axial2)
+    AxialStrain3.append(axial3)
+    AxialStrain4.append(axial4)
+    AxialStrain5.append(axial5)
+
+
+########################################################################################################
+
+
+
+
+
+########################################################################################################
+# Bending strains (= (strain_outside - strain_inside)/2 ):
+
+bendingstrain1 = []
+bendingstrain2 = [] 
+bendingstrain3 = []
+bendingstrain4 = []
+bendingstrain5 = []
+
+for i in range(0,len(axialstrain1_out)):
+    bending1 = (axialstrain1_out[i] - axialstrain1_in[i])/2
+    bending2 = (axialstrain2_out[i] - axialstrain2_in[i])/2
+    bending3 = (axialstrain3_out[i] - axialstrain3_in[i])/2
+    bending4 = (axialstrain4_out[i] - axialstrain4_in[i])/2
+    bending5 = (axialstrain5_out[i] - axialstrain5_in[i])/2
     
-    str_in_1 = np.sqrt(str_xprime1_in[j]**2 + str_yprime1_in[j]**2 + str_in_z_1[j]**2)
-    str_in_2 = np.sqrt(str_xprime2_in[j]**2 + str_yprime2_in[j]**2 + str_in_z_2[j]**2)
-    str_in_3 = np.sqrt(str_xprime3_in[j]**2 + str_yprime3_in[j]**2 + str_in_z_3[j]**2)
-    str_in_4 = np.sqrt(str_xprime4_in[j]**2 + str_yprime4_in[j]**2 + str_in_z_4[j]**2)
-    str_in_5 = np.sqrt(str_xprime5_in[j]**2 + str_yprime5_in[j]**2 + str_in_z_5[j]**2)
-    
-    str_bend_1 = (str_out_1 - str_in_1) / 2
-    str_bend_2 = (str_out_2 - str_in_2) / 2
-    str_bend_3 = (str_out_3 - str_in_3) / 2
-    str_bend_4 = (str_out_4 - str_in_4) / 2
-    str_bend_5 = (str_out_5 - str_in_5) / 2
-    
-    bendstr1.append(str_bend_1)
-    bendstr2.append(str_bend_2)
-    bendstr3.append(str_bend_3)
-    bendstr4.append(str_bend_4)
-    bendstr5.append(str_bend_5)
-'''
+    bendingstrain1.append(bending1)
+    bendingstrain2.append(bending2)
+    bendingstrain3.append(bending3)           
+    bendingstrain4.append(bending4)
+    bendingstrain5.append(bending5)
+               
+########################################################################################################
+
+
+
+
 
 ########################################################################################################
 # Plot strains:
-plt.plot(arc,axialstr3_out, label='Loadstep 3, out')
-plt.plot(arc,axialstr3_in,  label='Loadstep 3, in')
+plt.plot(arc, AxialStrain3, label='Actuator disp = 20 [mm]')
 plt.xlabel("Arc length [mm]")
-plt.ylabel("Axial strain")
-plt.title("Axial strain on the inside and outside (actuator extension 20 [mm])")
+plt.ylabel("Axial strain [*10^-6]")
+plt.title("Axial strain for load step 3")
 plt.grid()
 plt.legend()
 plt.show()
-########################################################################################################
 
+plt.plot(arc, AxialStrain5, label='Actuator disp = 39.2 [mm]')
+plt.xlabel("Arc length [mm]")
+plt.ylabel("Axial strain [*10^-6]")
+plt.title("Axial strain for load step 5")
+plt.grid()
+plt.legend()
+plt.show()
 
+plt.plot(arc, bendingstrain3, label='Actuator disp = 20 [mm]')
+plt.xlabel("Arc length [mm]")
+plt.ylabel("Bending strain [*10^-6]")
+plt.title("Bending strain for load step 3")
+plt.grid()
+plt.legend()
+plt.show()
 
+plt.plot(arc, bendingstrain5, label='Actuator disp = 39.2 [mm]')
+plt.xlabel("Arc length [mm]")
+plt.ylabel("Bending strain [*10^-6]")
+plt.title("Bending strain for load step 5")
+plt.grid()
+plt.legend()
+plt.show()
 
 
 
@@ -368,11 +443,7 @@ plt.show()
 E = 71 * 10^9 
 
 # Strain energy can be calculated: U = 0.5 * E * strain^2. E = Young's modulus
-U_x1 = 0.5 * E * strain_x_1 * strain_x_1
-U_x2 = 0.5 * E * strain_x_2 * strain_x_2
-U_x3 = 0.5 * E * strain_x_3 * strain_x_3
-U_x4 = 0.5 * E * strain_x_4 * strain_x_4
-U_x5 = 0.5 * E * strain_x_5 * strain_x_5
+
 
 
 
