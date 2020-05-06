@@ -44,15 +44,19 @@ f2=n2-n1
 f2=f2/m1
 
 plt.grid()
+plt.title("Current against voltage of the power source")
 plt.ylabel('Voltage current source[V]')
 plt.xlabel('Current power source[A]')
 plt.plot(current_power_source, voltage_power_source,'x',label='Calibration data')
 plt.plot(current_power_source, m1*current_power_source+n1,'r',label='Linear regression')
+plt.axis([0,5,0,5])
 plt.show()
 
 plt.grid()
+plt.title("Power source voltage against current sensor voltage")
 plt.ylabel('Voltage power source[V]')
 plt.xlabel('Voltage current sensor[V]')
 plt.plot(voltage_current_sensor,voltage_power_source_calib,'x',label='Calibration data')
 plt.plot(voltage_current_sensor,voltage_current_sensor*m2+n2,'r',label='Linear regression')
+plt.axis([0,3,0,5])
 plt.show()
