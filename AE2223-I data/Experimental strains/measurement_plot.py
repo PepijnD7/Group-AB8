@@ -48,6 +48,9 @@ def actual_location_est(p1, p2):
 # load step number      1  2   3   4   5
 load_steps_t = [1, 13, 28, 40, 55]
 
+
+load_step_ext = [0,"0","10","20","30","39"]
+
 count = 1
 for t in load_steps_t:
 
@@ -128,8 +131,9 @@ for t in load_steps_t:
 
     plt.xlabel("Arc length [m]")
     plt.ylabel("Strain[10^-6]")
-    plt.title("Strain measurement loadstep " + str(count))
+    plt.title("Strain measurement "+ load_step_ext[count] + "mm extension ")
     plt.grid()
+    plt.ylim(-15100, 4500)
     plt.legend()
     plt.show()
 
@@ -161,14 +165,15 @@ for t in load_steps_t:
 
     plt.xlabel("Arc length [m]")
     plt.ylabel("Strain[10^-6]")
-    plt.title("Axial strain loadstep " + str(count))
+    plt.title("Axial strain "+ load_step_ext[count] + "mm extension ")
     plt.grid()
+    plt.ylim(-3200, 3500)
     plt.show()
     # Bending strain
-    bending_strain1 = (strainIn1 - strainOut1) / 2
-    bending_strain2 = (strainIn2 - strainOut2) / 2
-    bending_strain3 = (strainIn3 - strainOut3) / 2
-    bending_strain4 = (strainIn4 - strainOut4) / 2
+    bending_strain1 = (-strainIn1 + strainOut1) / 2
+    bending_strain2 = (-strainIn2 + strainOut2) / 2
+    bending_strain3 = (-strainIn3 + strainOut3) / 2
+    bending_strain4 = (-strainIn4 + strainOut4) / 2
 
     plt.plot(interval1, bending_strain1, color =col)
     plt.plot(interval2, bending_strain2, color =col)
@@ -178,8 +183,9 @@ for t in load_steps_t:
 
     plt.xlabel("Arc length [m]")
     plt.ylabel("Strain[10^-6]")
-    plt.title("Bending strain loadstep " + str(count))
+    plt.title("Bending strain "+ load_step_ext[count] + "mm extension ")
     plt.grid()
+    plt.ylim(-3200, 3500)
     plt.show()
 
     count += 1
