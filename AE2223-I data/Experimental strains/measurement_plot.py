@@ -7,6 +7,8 @@ from scipy import interpolate
 data = pd.read_csv("Measurements2014_05_22.txt", sep="\t", engine='python', header=4)
 print(data.head())
 
+yyield = -8860
+
 code_location = {"A0": 1.58908, "A1": 2.09349, "A2": 2.59791,
                  "B0": 3.77008, "B1": 3.26436, "B2": 2.75864,
                  "C0": 0.192102, "C1": 0.414263, "C2": 0.510969, "C3": 0.673016, "C4": 0.793244, "C5": 0.848131,
@@ -128,12 +130,15 @@ for t in load_steps_t:
     plt.plot(xnew, np.negative(Cinter(xnew)), label='C[ *-1]')
     plt.plot(xnew, np.negative(Dinter(xnew)), label=' D[ *-1]')
     plt.plot(stiffeners, [0, 0, 0, 0], "o", label='Stiffeners')
+    plt.plot(xnew, (np.ones(xnew.shape)* yyield),'--', label = "Yield strain")
 
     plt.xlabel("Arc length [m]")
     plt.ylabel("Strain[10^-6]")
     plt.title("Strain measurement "+ load_step_ext[count] + "mm extension ")
     plt.grid()
     plt.ylim(-15100, 4500)
+    plt.xlim(min(xnew), max(xnew))
+
     plt.legend()
     plt.show()
 
@@ -168,6 +173,7 @@ for t in load_steps_t:
     plt.title("Axial strain "+ load_step_ext[count] + "mm extension ")
     plt.grid()
     plt.ylim(-3200, 3500)
+    plt.xlim(min(interval1),max(interval4))
     plt.show()
     # Bending strain
     bending_strain1 = (-strainIn1 + strainOut1) / 2
@@ -186,6 +192,7 @@ for t in load_steps_t:
     plt.title("Bending strain "+ load_step_ext[count] + "mm extension ")
     plt.grid()
     plt.ylim(-3200, 3500)
+    plt.xlim(min(interval1), max(interval4))
     plt.show()
 
     count += 1
