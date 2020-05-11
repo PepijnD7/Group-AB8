@@ -2,11 +2,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import interpolate
-
+from FEM_strain import FEM_DATA_PLOT
 # Opens the data
 data = pd.read_csv("Measurements2014_05_22.txt", sep="\t", engine='python', header=4)
 print(data.head())
 
+#fem data :list of lists witf fem[i][j] i being the loadstep with (xcord,axial,bending)
+FEM =FEM_DATA_PLOT()
+
+#yield strain by department of denfence USA
 yyield = -8860
 
 code_location = {"A0": 1.58908, "A1": 2.09349, "A2": 2.59791,
@@ -55,6 +59,10 @@ load_step_ext = [0,"0","10","20","30","39"]
 
 count = 1
 for t in load_steps_t:
+
+    FEMx = FEM[count-1][0]
+    FEMaxial = FEM[count-1][1]
+    FEMbending = FEM[count-1][2]
 
     A_plot = []
     Ay_plot = []
@@ -162,10 +170,11 @@ for t in load_steps_t:
     axial_strain4 = (strainIn4 + strainOut4) / 2
 
     col = "0.35"
-    plt.plot(interval1, axial_strain1, color =col)
+    plt.plot(interval1, axial_strain1, color =col, label = "Experiment")
     plt.plot(interval2, axial_strain2, color =col)
     plt.plot(interval3, axial_strain3, color =col)
     plt.plot(interval4, axial_strain4, color =col)
+    plt.plot(FEMx, FEMaxial, "--", color = col, label = "FEM")
     plt.plot(stiffeners, [0, 0, 0, 0], "o", label='Stiffeners')
 
     plt.xlabel("Arc length [m]")
@@ -174,6 +183,7 @@ for t in load_steps_t:
     plt.grid()
     plt.ylim(-3200, 3500)
     plt.xlim(min(interval1),max(interval4))
+    plt.legend()
     plt.show()
     # Bending strain
     bending_strain1 = (-strainIn1 + strainOut1) / 2
@@ -181,10 +191,11 @@ for t in load_steps_t:
     bending_strain3 = (-strainIn3 + strainOut3) / 2
     bending_strain4 = (-strainIn4 + strainOut4) / 2
 
-    plt.plot(interval1, bending_strain1, color =col)
+    plt.plot(interval1, bending_strain1, color =col, label = "Experiment")
     plt.plot(interval2, bending_strain2, color =col)
     plt.plot(interval3, bending_strain3, color =col)
     plt.plot(interval4, bending_strain4, color =col)
+    plt.plot(FEMx, FEMbending, "--", color=col, label = "FEM")
     plt.plot(stiffeners, [0, 0, 0, 0], "o", label='Stiffeners')
 
     plt.xlabel("Arc length [m]")
@@ -193,6 +204,7 @@ for t in load_steps_t:
     plt.grid()
     plt.ylim(-3200, 3500)
     plt.xlim(min(interval1), max(interval4))
+    plt.legend()
     plt.show()
 
     count += 1

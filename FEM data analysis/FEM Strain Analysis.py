@@ -122,7 +122,7 @@ y = array_coordinates[:,3]*1000 # y coordinates in [mm]
 arc = []
 length = 0
 for i in range(0,len(x)-1):
-    length = length + sqrt((abs(x[i]-x[i+1]))**2 + (abs(y[i]-y[i+1]))**2 )
+    length = length + sqrt((x[i]-x[i+1])**2 + (y[i]-y[i+1])**2 )
     arc.append(length)
     i = i+1
 ########################################################################################################
