@@ -9,7 +9,8 @@ print(data.head())
 
 #fem data :list of lists witf fem[i][j] i being the loadstep with (xcord,axial,bending)
 FEM =FEM_DATA_PLOT()
-
+FEMaxzero = FEM[0][1]
+FEMbendzero = FEM[0][2]
 #yield strain by department of denfence USA
 yyield = -8860
 
@@ -174,7 +175,7 @@ for t in load_steps_t:
     plt.plot(interval2, axial_strain2, color =col)
     plt.plot(interval3, axial_strain3, color =col)
     plt.plot(interval4, axial_strain4, color =col)
-    plt.plot(FEMx, FEMaxial, "--", color = col, label = "FEM")
+    plt.plot(FEMx, (np.array(FEMaxial)-np.array(FEMaxzero)), "--", color = col, label = "FEM")
     plt.plot(stiffeners, [0, 0, 0, 0], "o", label='Stiffeners')
 
     plt.xlabel("Arc length [m]")
@@ -182,7 +183,7 @@ for t in load_steps_t:
     plt.title("Axial strain "+ load_step_ext[count] + "mm extension ")
     plt.grid()
     plt.ylim(-3200, 3500)
-    plt.xlim(min(interval1),max(interval4))
+    plt.xlim(0,max(interval4))
     plt.legend()
     plt.show()
     # Bending strain
@@ -195,7 +196,7 @@ for t in load_steps_t:
     plt.plot(interval2, bending_strain2, color =col)
     plt.plot(interval3, bending_strain3, color =col)
     plt.plot(interval4, bending_strain4, color =col)
-    plt.plot(FEMx, FEMbending, "--", color=col, label = "FEM")
+    plt.plot(FEMx, (np.array(FEMbending)-np.array(FEMbendzero)), "--", color=col, label = "FEM")
     plt.plot(stiffeners, [0, 0, 0, 0], "o", label='Stiffeners')
 
     plt.xlabel("Arc length [m]")
@@ -203,7 +204,7 @@ for t in load_steps_t:
     plt.title("Bending strain "+ load_step_ext[count] + "mm extension ")
     plt.grid()
     plt.ylim(-3200, 3500)
-    plt.xlim(min(interval1), max(interval4))
+    plt.xlim(0, max(interval4))
     plt.legend()
     plt.show()
 
