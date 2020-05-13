@@ -17,8 +17,8 @@ ret, threshold = cv2.threshold(imgray, 127, 255, 0)
 # Detecting contours in image.
 contours, hierarchy = cv2.findContours(threshold, cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
 print("Number of contours="+str(len(contours)))
-print(contours[0])
-cv2.drawContours(img,contours,-1,(0,255,0),3)
+print(contours)
+cv2.drawContours(img,contours[7],-1,(0,255,0),3)
 
 cv2.imshow('Image',img)
 cv2.imshow('IMage GRAY',imgray)
