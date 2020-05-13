@@ -61,7 +61,7 @@ load_step_ext = [0,"0","10","20","30","39"]
 count = 1
 for t in load_steps_t:
 
-    FEMx = FEM[count-1][0]
+    FEMx = np.array(FEM[count-1][0])*1000
     FEMaxial = FEM[count-1][1]
     FEMbending = FEM[count-1][2]
 
@@ -134,19 +134,19 @@ for t in load_steps_t:
     Dinter = interpolate.interp1d(np.array(D_plot), np.array(Dy_plot), kind="cubic")
 
     # General Strain
-    plt.plot(xnew, Ainter(xnew), label='A')
-    plt.plot(xnew, Binter(xnew), label=' B')
-    plt.plot(xnew, np.negative(Cinter(xnew)), label='C[ *-1]')
-    plt.plot(xnew, np.negative(Dinter(xnew)), label=' D[ *-1]')
-    plt.plot(stiffeners, [0, 0, 0, 0], "o", label='Stiffeners')
-    plt.plot(xnew, (np.ones(xnew.shape)* yyield),'--', label = "Yield strain")
+    plt.plot(xnew*1000, Ainter(xnew), label='A')
+    plt.plot(xnew*1000, Binter(xnew), label=' B')
+    plt.plot(xnew*1000, np.negative(Cinter(xnew)), label='C[ *-1]')
+    plt.plot(xnew*1000, np.negative(Dinter(xnew)), label=' D[ *-1]')
+    plt.plot(np.array(stiffeners)*1000, [0, 0, 0, 0], "o", label='Stiffeners')
+    plt.plot(xnew*1000, (np.ones(xnew.shape)* yyield),'--', label = "Yield strain")
 
-    plt.xlabel("Arc length [m]")
+    plt.xlabel("Arc length [mm]")
     plt.ylabel("Strain[10^-6]")
     plt.title("Strain measurement "+ load_step_ext[count] + "mm extension ")
     plt.grid()
     plt.ylim(-15100, 4500)
-    plt.xlim(min(xnew), max(xnew))
+    plt.xlim(min(xnew*1000), max(xnew*1000))
 
     plt.legend()
     plt.show()
@@ -171,19 +171,19 @@ for t in load_steps_t:
     axial_strain4 = (strainIn4 + strainOut4) / 2
 
     col = "0.35"
-    plt.plot(interval1, axial_strain1, color =col, label = "Experiment")
-    plt.plot(interval2, axial_strain2, color =col)
-    plt.plot(interval3, axial_strain3, color =col)
-    plt.plot(interval4, axial_strain4, color =col)
+    plt.plot(interval1*1000, axial_strain1, color =col, label = "Experiment")
+    plt.plot(interval2*1000, axial_strain2, color =col)
+    plt.plot(interval3*1000, axial_strain3, color =col)
+    plt.plot(interval4*1000, axial_strain4, color =col)
     plt.plot(FEMx, (np.array(FEMaxial)-np.array(FEMaxzero)), "--", color = col, label = "FEM")
-    plt.plot(stiffeners, [0, 0, 0, 0], "o", label='Stiffeners')
+    plt.plot(np.array(stiffeners)*1000, [0, 0, 0, 0], "o", label='Stiffeners')
 
-    plt.xlabel("Arc length [m]")
+    plt.xlabel("Arc length [mm]")
     plt.ylabel("Strain[10^-6]")
     plt.title("Axial strain "+ load_step_ext[count] + "mm extension ")
     plt.grid()
     plt.ylim(-3200, 3500)
-    plt.xlim(0,max(interval4))
+    plt.xlim(0,max(interval4*1000))
     plt.legend()
     plt.show()
     # Bending strain
@@ -192,19 +192,19 @@ for t in load_steps_t:
     bending_strain3 = (-strainIn3 + strainOut3) / 2
     bending_strain4 = (-strainIn4 + strainOut4) / 2
 
-    plt.plot(interval1, bending_strain1, color =col, label = "Experiment")
-    plt.plot(interval2, bending_strain2, color =col)
-    plt.plot(interval3, bending_strain3, color =col)
-    plt.plot(interval4, bending_strain4, color =col)
+    plt.plot(interval1*1000, bending_strain1, color =col, label = "Experiment")
+    plt.plot(interval2*1000, bending_strain2, color =col)
+    plt.plot(interval3*1000, bending_strain3, color =col)
+    plt.plot(interval4*1000, bending_strain4, color =col)
     plt.plot(FEMx, (np.array(FEMbending)-np.array(FEMbendzero)), "--", color=col, label = "FEM")
-    plt.plot(stiffeners, [0, 0, 0, 0], "o", label='Stiffeners')
+    plt.plot(np.array(stiffeners)*1000, [0, 0, 0, 0], "o", label='Stiffeners')
 
-    plt.xlabel("Arc length [m]")
+    plt.xlabel("Arc length [mm]")
     plt.ylabel("Strain[10^-6]")
     plt.title("Bending strain "+ load_step_ext[count] + "mm extension ")
     plt.grid()
-    plt.ylim(-3200, 3500)
-    plt.xlim(0, max(interval4))
+    plt.ylim(-4000, 5000)
+    plt.xlim(0, max(interval4*1000))
     plt.legend()
     plt.show()
 

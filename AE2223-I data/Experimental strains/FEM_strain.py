@@ -135,7 +135,7 @@ def FEM_DATA_PLOT():#list of lists witf fem[i][j] i being the loadstep with (xco
     # Get the angles between the local coordinate systems and the global coordinate system for each node:
     theta = []
     for i in range(0,len(x)-1):
-        T = np.arctan(abs(y[i]-y[i+1])/abs(x[i]-x[i+1]))
+        T = np.arctan2((y[i+1]-y[i]),(x[i+1]-x[i]))
         theta.append(T)
 
     print(max(theta)) # Should be around pi/2 for the tip of the leading edge
@@ -154,70 +154,41 @@ def FEM_DATA_PLOT():#list of lists witf fem[i][j] i being the loadstep with (xco
     str_in_x_1   = array_str1_in[:,1]
     str_out_y_1  = array_str1_out[:,2]
     str_in_y_1   = array_str1_in[:,2]
-    str_out_z_1  = array_str1_out[:,3]
-    str_in_z_1   = array_str1_in[:,3]
     str_out_xy_1 = array_str1_out[:,4]
     str_in_xy_1  = array_str1_in[:,4]
-    str_out_yz_1 = array_str1_out[:,5]
-    str_in_yz_1  = array_str1_in[:,5]
-    str_out_xz_1 = array_str1_out[:,6]
-    str_in_xz_1  = array_str1_in[:,6]
 
     # Get strain on inside and outside for load step 2:
     str_out_x_2  = array_str2_out[:,1]
     str_in_x_2   = array_str2_in[:,1]
     str_out_y_2  = array_str2_out[:,2]
     str_in_y_2   = array_str2_in[:,2]
-    str_out_z_2  = array_str2_out[:,3]
-    str_in_z_2   = array_str2_in[:,3]
     str_out_xy_2 = array_str2_out[:,4]
     str_in_xy_2  = array_str2_in[:,4]
-    str_out_yz_2 = array_str2_out[:,5]
-    str_in_yz_2  = array_str2_in[:,5]
-    str_out_xz_2 = array_str2_out[:,6]
-    str_in_xz_2  = array_str2_in[:,6]
 
     # Get strain on inside and outside for load step 3:
     str_out_x_3  = array_str3_out[:,1]
     str_in_x_3   = array_str3_in[:,1]
     str_out_y_3  = array_str3_out[:,2]
     str_in_y_3   = array_str3_in[:,2]
-    str_out_z_3  = array_str3_out[:,3]
-    str_in_z_3   = array_str3_in[:,3]
     str_out_xy_3 = array_str3_out[:,4]
     str_in_xy_3  = array_str3_in[:,4]
-    str_out_yz_3 = array_str3_out[:,5]
-    str_in_yz_3  = array_str3_in[:,5]
-    str_out_xz_3 = array_str3_out[:,6]
-    str_in_xz_3  = array_str3_in[:,6]
 
     # Get strain on inside and outside for load step 4:
     str_out_x_4  = array_str4_out[:,1]
     str_in_x_4   = array_str4_in[:,1]
     str_out_y_4  = array_str4_out[:,2]
     str_in_y_4   = array_str4_in[:,2]
-    str_out_z_4  = array_str4_out[:,3]
-    str_in_z_4   = array_str4_in[:,3]
     str_out_xy_4 = array_str4_out[:,4]
     str_in_xy_4  = array_str4_in[:,4]
-    str_out_yz_4 = array_str4_out[:,5]
-    str_in_yz_4  = array_str4_in[:,5]
-    str_out_xz_4 = array_str4_out[:,6]
-    str_in_xz_4  = array_str4_in[:,6]
 
     # Get strain on inside and outside for load step 5:
     str_out_x_5  = array_str5_out[:,1]
     str_in_x_5   = array_str5_in[:,1]
     str_out_y_5  = array_str5_out[:,2]
     str_in_y_5   = array_str5_in[:,2]
-    str_out_z_5  = array_str5_out[:,3]
-    str_in_z_5   = array_str5_in[:,3]
     str_out_xy_5 = array_str5_out[:,4]
     str_in_xy_5  = array_str5_in[:,4]
-    str_out_yz_5 = array_str5_out[:,5]
-    str_in_yz_5  = array_str5_in[:,5]
-    str_out_xz_5 = array_str5_out[:,6]
-    str_in_xz_5  = array_str5_in[:,6]
+
 
     ########################################################################################################
 
