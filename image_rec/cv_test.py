@@ -4,6 +4,7 @@ import numpy as np
 
 img = cv2.imread('G19_edited.jpg')
 
+# open cv magic, extracts color of contour
 cv2.namedWindow('G19', cv2.WINDOW_NORMAL)
 hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 lower_bound = np.array([5, 190, 190])
