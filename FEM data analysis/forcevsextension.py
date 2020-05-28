@@ -5,7 +5,7 @@ from scipy.integrate import simps
 from scipy import signal
 from numpy import trapz
 import statistics as st
-from extension_time_new_factors import t1,t2,t3,t4,f1,f2,f3,f4,dis1,dis2,dis3,dis4, fem
+from extension_time_new_factors import t1,t2,t3,t4,f1,f2,f3,f4,dis1,dis2,dis3,dis4
 
 
 
@@ -133,19 +133,19 @@ for j in range(len(smoothforces)):
         partwork[j][i]=trapz(smoothforces[j][:i],(np.array(smoothdisps[j][:i]))/1000)
 
 # plots the work done vs time
-plt.grid(True)
-plt.xlabel("Time [s]")
-plt.ylabel("Energy [J]")
-plt.ylim(0,30)
-plt.xlim(0,40)
-plt.xticks(np.arange(0,42.5,2.5))
-plt.yticks(range(0,32,))
-plt.plot(smoothdisps[0],partwork[0],color='r',label='10mm')
-plt.plot(smoothdisps[1],partwork[1],color='g',label='20 mm')
-plt.plot(smoothdisps[2],partwork[2],color='b',label='30 mm')
-plt.plot(smoothdisps[3],partwork[3],color='y',label='39 mm')
-plt.legend()
-plt.show()
+#plt.grid(True)
+#plt.xlabel("Time [s]")
+#plt.ylabel("Energy [J]")
+#plt.ylim(0,30)
+#plt.xlim(0,40)
+#plt.xticks(np.arange(0,42.5,2.5))
+#plt.yticks(range(0,32,))
+#plt.plot(smoothdisps[0],partwork[0],color='r',label='10mm')
+#plt.plot(smoothdisps[1],partwork[1],color='g',label='20 mm')
+#plt.plot(smoothdisps[2],partwork[2],color='b',label='30 mm')
+#plt.plot(smoothdisps[3],partwork[3],color='y',label='39 mm')
+#plt.legend()
+#plt.show()
 
 
 
@@ -189,4 +189,6 @@ work4 = trapz(force4,disp4)
 # print(work4)
 
 
-
+print(smoothdisps[3])
+print()
+print(partwork[3])

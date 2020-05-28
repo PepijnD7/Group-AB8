@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import interpolate
 from scipy import integrate
+from smoothlists import smoothdisps,partwork
 
 # Open Force and Displacement file:
 ForceDisp = open("femForceDisplacement.txt")
@@ -44,12 +45,12 @@ for i in range(len(x_axis)):
 print(work)
 
 # Plot force and displacement:
-plt.plot(x_axis, spline(x_axis), 'b')
+plt.plot(x_axis, spline(x_axis), color='dimgrey')
 #plt.plot(0 , 0 , 'b' , marker='o')
-plt.plot(displacement1, force1, 'b', marker='o')
-plt.plot(displacement2, force2, 'b', marker='o')
-plt.plot(displacement3, force3, 'b', marker='o')
-plt.plot(displacement4, force4, 'b', marker='o')
+plt.plot(displacement1, force1, color='dimgrey', marker='o')
+plt.plot(displacement2, force2, color='dimgrey', marker='o')
+plt.plot(displacement3, force3, color='dimgrey', marker='o')
+plt.plot(displacement4, force4, color='dimgrey', marker='o')
 plt.ylabel("Actuation force [N]")
 plt.xlabel("Displacement [mm]")
 plt.xlim(0,40)
@@ -59,10 +60,12 @@ plt.show()
 
 
 # Plot work and displacement:
-plt.plot(x_axis, work, 'b')
+plt.plot(x_axis, work, color='dimgrey', linestyle='dashed', label='Strain energy (FEM)')
+plt.plot(smoothdisps, partwork, color='dimgrey', label='Actuation energy (experiment)')
 plt.ylabel("Work [J]")
 plt.xlabel("Displacement [mm]")
 plt.grid()
+plt.legend()
 plt.xlim(0,40)
 plt.ylim(0,30)
 plt.show()
