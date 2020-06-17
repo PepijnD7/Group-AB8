@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.ndimage import gaussian_filter
-from scipy import interpolate
+import scipy as sp
 
 '''4 measurements for displacement
 Dis1 - 10mm
@@ -24,10 +23,6 @@ vcsl_1=list()
 vcsl_2=list()
 vcsl_3=list()
 vcsl_4=list()
-
-#FEM data, displacement and force
-fem=np.array([[10,20,30,39.2],
-              [243.2,173,529.7,1213.5]])
 
 data_file=open("Dis1.txt","r")
 i=0
@@ -93,16 +88,12 @@ dis2=10*vps_2/2
 dis3=10*vps_3/2
 dis4=10*vps_4/2
 
-#calculate the current from vcs using the relation
-#found in calibration_reading.py
-#current=f1*vcs+f1
-f1=-4.78935172112945
-f2=11.975657507913853
-
-c1=f1*vcs_1+f2
-c2=f1*vcs_2+f2
-c3=f1*vcs_3+f2
-c4=f1*vcs_4+f2
+#calculate the current from vcs using the relation found in excel
+# current=(vcs-2.521)/(-0.1457)
+c1=(vcs_1-2.521)/(-0.1457)
+c2=(vcs_2-2.521)/(-0.1457)
+c3=(vcs_3-2.521)/(-0.1457)
+c4=(vcs_4-2.521)/(-0.1457)
 
 #use data sheet to get force
 dy_dx=0.00058
@@ -175,27 +166,10 @@ f2=f2-error[0,1]
 f3=f3-error[0,2]
 f4=f4-error[0,3]
 
-#cut-off unnecessary data at the end
-f1=np.delete(f1,np.s_[200:])
-f2=np.delete(f2,np.s_[300:])
-f3=np.delete(f3,np.s_[400:])
-f4=np.delete(f4,np.s_[500:])
-
-dis1=np.delete(dis1,np.s_[200:])
-dis2=np.delete(dis2,np.s_[300:])
-dis3=np.delete(dis3,np.s_[400:])
-dis4=np.delete(dis4,np.s_[500:])
-
-t1=np.delete(t1,np.s_[200:])
-t2=np.delete(t2,np.s_[300:])
-t3=np.delete(t3,np.s_[400:])
-t4=np.delete(t4,np.s_[500:])
-
-#displacement is not affected by error
-##dis1=dis1-error[1,0]
-##dis2=dis2-error[1,1]
-##dis3=dis3-error[1,2]
-##dis4=dis4-error[1,3]
+dis1=dis1-error[1,0]
+dis2=dis2-error[1,1]
+dis3=dis3-error[1,2]
+dis4=dis4-error[1,3]
 
 #set time to zero
 t1=t1-t1[0]
@@ -203,67 +177,33 @@ t2=t2-t2[0]
 t3=t3-t3[0]
 t4=t4-t4[0]
 
-'''
+
 plt.grid()
-plt.ylim(0,40)
-plt.xlim(0,14)
 plt.ylabel('Actuator extension [mm]')
 plt.xlabel('Time [s]')
-plt.plot(t1,dis1,'r-',label='10mm')
-plt.plot(t2,dis2,'g:',label='20mm')
-plt.plot(t3,dis3,'b-.',label='30mm')
-plt.plot(t4,dis4,'y--',label='39mm')
-plt.legend()
+plt.plot(t1,dis1,':',label='10mm')
+plt.plot(t2,dis2,'-.',label='20mm')
+plt.plot(t3,dis3,'--',label='30mm')
+plt.plot(t4,dis4,'-',label='39mm')
+plt.legend(title='Maximum extension:')
 plt.show()
 
 plt.grid()
-plt.xticks(np.arange(0,13,step=1))
-plt.yticks(np.arange(0,1500,step=100))
-plt.ylim(0,1300)
-plt.xlim(0,12)
 plt.ylabel('Actuation force [N]')
 plt.xlabel('Time [s]')
-plt.plot(t1,f1,'r-',label='10mm')
-plt.plot(t2,f2,'g:',label='20mm')
-plt.plot(t3,f3,'b-.',label='30mm')
-plt.plot(t4,f4,'y--',label='39mm')
+plt.plot(t1,f1,':',label='10mm')
+plt.plot(t2,f2,'-.',label='20mm')
+plt.plot(t3,f3,'--',label='30mm')
+plt.plot(t4,f4,'-',label='39mm')
 plt.legend(title='Maximum extension:', loc='upper right')
 plt.show()
-'''
 
-sf1=gaussian_filter(f1,4)
-sf2=gaussian_filter(f2,4)
-sf3=gaussian_filter(f3,4)
-sf4=gaussian_filter(f4,4)
-
-##interf=interpolate.interp1d(t1,f1)
-##intert1=np.arange(0,10,0.1)
-##interf1=interf(intert1)
-
-# plt.grid()
-# plt.ylabel('Actuation force [N]')
-# plt.xlabel('Time [s]')
-# plt.xticks(np.arange(0,13,step=1))
-# plt.yticks(np.arange(0,1500,step=100))
-# plt.ylim(0,1300)
-# plt.xlim(0,12)
-
-# # plt.scatter(t1,f1,color='r',marker='.',s=5)
-# # plt.scatter(t2,f2,color='g',marker='.',s=5)
-# # plt.scatter(t3,f3,color='b',marker='.',s=5)
-# # plt.scatter(t4,f4,color='y',marker='.',s=5)
-# # plt.plot(t1,sf1,'r',label='10mm')
-# # plt.plot(t2,sf2,'g',label='20mm')
-# # plt.plot(t3,sf3,'b',label='30mm')
-# # plt.plot(t4,sf4,'y',label='39mm')
-# #plt.plot(intert1,interf1)
-
-
-# # plt.plot(2.9,fem[1][0],'bo', fillstyle='none', label='FEM')
-# # plt.plot(5.5,fem[1][1],'bo', fillstyle='none')
-# # plt.plot(7.75,fem[1][2],'bo', fillstyle='none')
-# # plt.plot(10,fem[1][3],'bo', fillstyle='none')
-
-# #plt.plot(intert1,interf1)
-# plt.legend(loc='upper right')
-# plt.show()
+plt.grid()
+plt.ylabel('Actuation force [N]')
+plt.xlabel('Time [s]')
+plt.plot(t1,f1,'bo',label='10mm')
+plt.plot(t2,f2,'gx',label='20mm')
+plt.plot(t3,f3,'r+',label='30mm')
+plt.plot(t4,f4,'y^',label='39mm')
+plt.legend(title='Maximum extension:', loc='upper right')
+plt.show()
